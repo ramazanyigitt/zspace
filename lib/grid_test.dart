@@ -1,8 +1,8 @@
+import 'dart:developer';
+
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_reorderable_grid_view/entities/order_update_entity.dart';
-import 'package:flutter_reorderable_grid_view/widgets/reorderable_builder.dart';
-import 'package:nine_grid_view/nine_grid_view.dart';
-import 'package:reorderable_griditem_view/reorderable_griditem_view.dart';
+import 'package:flutter/services.dart';
 
 class GridTest extends StatefulWidget {
   const GridTest({Key? key}) : super(key: key);
@@ -14,12 +14,25 @@ class GridTest extends StatefulWidget {
 class _GridTestState extends State<GridTest> {
   late List<Item> inventoryItems, tempList;
 
-  late ValueNotifier<int?> pos;
+  late ValueNotifier<int?> selectingIndex;
+  late int? selectedIndex;
+  late ScrollController _scrollController;
   @override
   void initState() {
-    pos = ValueNotifier<int?>(null);
+    selectingIndex = ValueNotifier<int?>(null);
+    selectedIndex = null;
     inventoryItems = [];
     int index = 0;
+    Colors.accents.forEach((element) {
+      inventoryItems.add(
+        Item(
+          index,
+          Color(element.value),
+          '$index',
+        ),
+      );
+      index += 1;
+    });
     Colors.primaries.forEach((element) {
       inventoryItems.add(
         Item(
@@ -31,6 +44,7 @@ class _GridTestState extends State<GridTest> {
       index += 1;
     });
     tempList = List.from(inventoryItems);
+    _scrollController = ScrollController();
     super.initState();
   }
 
@@ -38,14 +52,46 @@ class _GridTestState extends State<GridTest> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            buildShipInventory(),
-            Expanded(child: buildPlayerInventory()),
-          ],
+        child: NestedScrollView(
+          controller: _scrollController,
+          body: buildPlayerInventory(),
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                collapsedHeight: 350,
+                expandedHeight: 350,
+                //floating: false,
+                pinned: true,
+                //snap: false,
+                backgroundColor: Colors.white,
+                flexibleSpace: FlexibleSpaceBar(
+                  stretchModes: [
+                    StretchMode.zoomBackground,
+                    StretchMode.blurBackground,
+                    StretchMode.fadeTitle,
+                  ],
+                  background: buildShipInventory(),
+                ),
+              ),
+            ];
+          },
         ),
       ),
     );
+  }
+
+  _moveUp() {
+    _scrollController.animateTo(
+        _scrollController.offset - _scrollController.initialScrollOffset,
+        curve: Curves.linear,
+        duration: Duration(milliseconds: 500));
+  }
+
+  _moveDown() {
+    _scrollController.animateTo(
+        _scrollController.offset + _scrollController.position.maxScrollExtent,
+        curve: Curves.linear,
+        duration: Duration(milliseconds: 500));
   }
 
   Widget buildGreyBox() {
@@ -58,10 +104,12 @@ class _GridTestState extends State<GridTest> {
 
   Widget buildShipInventory() {
     return Container(
-      height: 300,
+      width: 300,
+      height: 350,
       child: Row(
         children: [
           Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               draggableItemBox(inventoryItems[0]),
               draggableItemBox(inventoryItems[1]),
@@ -70,6 +118,7 @@ class _GridTestState extends State<GridTest> {
           ),
           Expanded(
             child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 10),
               width: 150,
               height: double.infinity,
               color: Colors.yellow,
@@ -79,6 +128,7 @@ class _GridTestState extends State<GridTest> {
             ),
           ),
           Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               draggableItemBox(inventoryItems[3]),
               draggableItemBox(inventoryItems[4]),
@@ -91,17 +141,24 @@ class _GridTestState extends State<GridTest> {
   }
 
   Widget buildPlayerInventory() {
-    return GridView.builder(
-      itemCount: inventoryItems.length - 6,
-      itemBuilder: (context, index) {
-        final item = inventoryItems[index + 6];
-        item.index = index + 6;
-        return draggableItemBox(item);
+    return NotificationListener<OverscrollIndicatorNotification>(
+      onNotification: (overscroll) {
+        print('Overrr');
+        overscroll.disallowGlow();
+        return true;
       },
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        mainAxisSpacing: 4,
-        crossAxisSpacing: 8,
+      child: GridView.builder(
+        itemCount: inventoryItems.length - 6,
+        itemBuilder: (context, index) {
+          final item = inventoryItems[index + 6];
+          item.index = index + 6;
+          return draggableItemBox(item);
+        },
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4,
+          mainAxisSpacing: 4,
+          crossAxisSpacing: 8,
+        ),
       ),
     );
   }
@@ -109,7 +166,8 @@ class _GridTestState extends State<GridTest> {
   Widget draggableItemBox(Item item) {
     return wrapWithDragTargetBoxBuilder(
       targetItem: item,
-      child: Draggable<Item>(
+      child: LongPressDraggable<Item>(
+        delay: Duration(milliseconds: 150),
         maxSimultaneousDrags: 1,
         data: item,
         //dragAnchorStrategy: pointerDragAnchorStrategy,
@@ -153,41 +211,64 @@ class _GridTestState extends State<GridTest> {
             ),
           ),
         ),
-        /*childWhenDragging: Container(
-          width: 100,
-          height: 100,
-          color: Colors.grey,
-        ),*/
-        child: ValueListenableBuilder(
-          valueListenable: pos.value != inventoryItems.indexOf(item)
-              ? ValueNotifier<int?>(null)
-              : pos,
+
+        childWhenDragging: ValueListenableBuilder(
+          valueListenable: selectingIndex,
           builder: (context, value, child) {
-            return Opacity(
-              opacity: pos.value != null
-                  ? pos.value == inventoryItems.indexOf(item)
-                      ? 0.6
-                      : 1
-                  : 1,
-              child: child,
+            log('Selecting index: ${selectingIndex.value} selected: $selectedIndex');
+
+            return AnimatedSwitcher(
+              duration: Duration(milliseconds: 250),
+              reverseDuration: Duration(milliseconds: 250),
+              transitionBuilder: (child, animation) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              },
+              child: selectedIndex == item.index
+                  ? Container(
+                      width: 100,
+                      height: 100,
+                      color: inventoryItems[selectingIndex.value!].color,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Index: ${inventoryItems[selectingIndex.value!].index}',
+                            ),
+                            Text(
+                              'Text ${inventoryItems[selectingIndex.value!].text}',
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : Container(
+                      key: GlobalKey(),
+                      color: Colors.grey,
+                      width: 100,
+                      height: 100,
+                    ),
             );
           },
-          child: Container(
-            width: 100,
-            height: 100,
-            color: item.color,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Index: ${item.index}',
-                  ),
-                  Text(
-                    'Text ${item.text}',
-                  ),
-                ],
-              ),
+        ),
+        child: Container(
+          width: 100,
+          height: 100,
+          color: item.color,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Index: ${item.index}',
+                ),
+                Text(
+                  'Text ${item.text}',
+                ),
+              ],
             ),
           ),
         ),
@@ -204,73 +285,27 @@ class _GridTestState extends State<GridTest> {
       },
       onAccept: (item) {
         print('Accepted index: ${item.index} ti ${targetItem.index}');
-        //print('- Removing index: ${item.index}');
-        //print('- Adding index: ${targetItem.index}');
-        if (targetItem.index > 5) {
-          inventoryItems.removeAt(item.index);
-          inventoryItems.insert(targetItem.index, item);
-        } else {
-          final targetItemIndex = targetItem.index;
-          targetItem.index = item.index;
-          item.index = targetItemIndex;
-          inventoryItems[targetItem.index] = targetItem;
-          inventoryItems[item.index] = item;
-          setState(() {});
-          return;
-        }
-        //inventoryItems.removeAt(item.index);
-        //inventoryItems.insert(targetItem.index, item);
 
-        //updateReorder(targetItem.index, item.index);
-        //updateReorder(item.index, targetItem.index);
-        tempList = List.from(inventoryItems);
-        pos.value = null;
+        final targetItemIndex = targetItem.index;
+        targetItem.index = item.index;
+        item.index = targetItemIndex;
+        inventoryItems[targetItem.index] = targetItem;
+        inventoryItems[item.index] = item;
+        selectingIndex.value = null;
         setState(() {});
+        return;
       },
       onWillAccept: (item) {
-        //print('Accepting index: ${item?.index} ti ${targetItem.index}');
-        if (targetItem.index <= 5) {
-          print(
-              '${DateTime.now().millisecondsSinceEpoch} target index: ${targetItem.index}');
-          inventoryItems = List.from(tempList);
-          setState(
-            () {},
-          );
-          return true;
-        }
-
-        //inventoryItems = List.from(tempList);
-        int indexOfFirstItem = inventoryItems.indexOf(item!);
-        int indexOfSecondItem = inventoryItems.indexOf(targetItem);
-        print(
-            '${DateTime.now().second} Accepting index 2: fi $indexOfFirstItem si $indexOfSecondItem');
-        print('Fi ${item.index} n: ${item.text}');
-        print('Si ${targetItem.index} n: ${targetItem.text}');
-
-        final newItem = inventoryItems.removeAt(indexOfFirstItem);
-        inventoryItems.insert(indexOfSecondItem, newItem);
-
-        pos.value = indexOfSecondItem;
-
-        /*indexOfFirstItem = inventoryItems.indexOf(item);
-        indexOfSecondItem = inventoryItems.indexOf(targetItem);
-        item.index = indexOfFirstItem;
-        targetItem.index = indexOfSecondItem;
-        print(
-            '${DateTime.now().second} AFFTER Accepting index 2: fi $indexOfFirstItem si $indexOfSecondItem');
-        print('Fi ${item.index} n: ${item.text}');
-        print('Si ${targetItem.index} n: ${targetItem.text}');*/
-
-        setState(
-          () {},
-        );
-
+        print('Accepting index: ${item?.index} ti ${targetItem.index}');
+        selectedIndex = item!.index;
+        selectingIndex.value = targetItem.index;
+        log('Selecting index: ${selectingIndex.value} selected: $selectedIndex');
         return true;
       },
       onLeave: (item) {
-        pos.value = null;
-        //inventoryItems = List.from(tempList);
-        //setState(() {});
+        selectedIndex = null;
+        selectingIndex.value = null;
+        log('Selecting index: ${selectingIndex.value} selected: $selectedIndex');
         print(
             'Test item leave: ${item?.index} and my index: ${targetItem.index}');
       },
@@ -281,26 +316,48 @@ class _GridTestState extends State<GridTest> {
       {required Item targetItem,
       required List<Item?> items,
       required Widget defaultChild}) {
-    if (items.length > 0) {
-      if (targetItem.index <= 5)
-        return Container(
-          width: 100,
-          height: 100,
-          color: items.first!.color,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Index: ${items.first!.index}',
-                ),
-                Text(
-                  'Text ${items.first!.text}',
+    if (items.length > 0 && items[0]?.index != targetItem.index) {
+      return TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0.95, end: 1),
+        duration: Duration(milliseconds: 400),
+        builder: (context, value, child) {
+          return Transform.scale(
+            scale: value,
+            child: child,
+          );
+        },
+        child: Opacity(
+          opacity: 0.7,
+          child: Container(
+            decoration: BoxDecoration(
+              color: items.first!.color,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.pink,
+                  spreadRadius: 4,
+                  blurRadius: 10,
+                  offset: Offset(0, 0),
                 ),
               ],
             ),
+            width: 100,
+            height: 100,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Index: ${items.first!.index}',
+                  ),
+                  Text(
+                    'Text ${items.first!.text}',
+                  ),
+                ],
+              ),
+            ),
           ),
-        );
+        ),
+      );
     }
     return defaultChild;
   }

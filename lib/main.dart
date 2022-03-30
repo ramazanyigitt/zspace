@@ -3,15 +3,9 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
-import 'package:zspace/change_children_bar.dart';
-import 'package:zspace/drag_test.dart';
-import 'package:zspace/grid_test.dart';
-import 'package:zspace/reorderable_widget.dart';
+import 'grid_test.dart';
 import 'objects/moveable/ships/test5.dart';
 import 'objects/moveable/ships/user_ship.dart';
-
-import 'package:drag_and_drop_lists/drag_and_drop_list_interface.dart';
-import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 /*
 void main() {
   runApp(GameWidget(game: JoystickExample()));

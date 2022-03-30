@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:flame/components.dart';
+
 import '../moveable_object.dart';
 
 class UserShip extends MoveableObject {
