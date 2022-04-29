@@ -3,7 +3,7 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
-import 'grid_test.dart';
+import 'presentation/screens/inventory/inventory_page.dart';
 import 'objects/moveable/ships/test5.dart';
 import 'objects/moveable/ships/user_ship.dart';
 /*
