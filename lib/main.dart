@@ -3,102 +3,43 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
-import 'presentation/screens/inventory/inventory_page.dart';
-import 'objects/moveable/ships/test5.dart';
-import 'objects/moveable/ships/user_ship.dart';
-/*
-void main() {
-  runApp(GameWidget(game: JoystickExample()));
-}*/
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:zspace/objects/moveable/ships/user_ship.dart';
+import 'package:zspace/presentation/screens/main_menu/main_menu_page.dart';
+import 'package:zspace/presentation/screens/main_menu/main_menu_viewmodel.dart';
+import 'package:zspace/presentation/screens/splash/splash_page.dart';
+import 'package:zspace/shared/app_theme.dart';
+import 'data/localization/messages.dart';
+import 'injection_container.dart' as di;
 
-enum ReorderableType {
-  gridView,
-  gridViewCount,
-  gridViewExtent,
-  gridViewBuilder,
-}
-
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await di.init();
   runApp(
-    MaterialApp(
-      home: GridTest(),
+    ScreenUtilInit(
+      designSize: Size(360, 690),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: () => GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        translations: Messages(),
+        locale: Locale('en', 'US'),
+        fallbackLocale: Locale('en', 'US'),
+        home: SplashPage(),
+        theme: ThemeData(
+          primaryColor: AppTheme().primaryColor,
+          secondaryHeaderColor: AppTheme().secondaryColor,
+          accentColor: AppTheme().primaryColor,
+        ),
+        builder: (context, widget) {
+          ScreenUtil.setContext(context);
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+            child: widget!,
+          );
+        },
+      ),
     ),
   );
-}
-
-class JoystickExample extends FlameGame
-    with HasDraggables, HasTappables, HasCollidables {
-  late final ShipPlayer player;
-  late final JoystickComponent joystick;
-  final knobPaint = BasicPalette.blue.withAlpha(200).paint();
-  final backgroundPaint = BasicPalette.blue.withAlpha(100).paint();
-
-  @override
-  void onTapDown(int pointerId, TapDownInfo info) {
-    joystick.position =
-        Vector2(info.eventPosition.global.x, info.eventPosition.global.y);
-    add(joystick);
-    super.onTapDown(pointerId, info);
-  }
-
-  @override
-  void onTapUp(int pointerId, TapUpInfo info) {
-    stopJoystick();
-    super.onTapUp(pointerId, info);
-  }
-
-  @override
-  void onDragStart(int pointerId, DragStartInfo details) {
-    joystick.position =
-        Vector2(details.eventPosition.global.x, details.eventPosition.global.y);
-    super.onDragStart(pointerId, details);
-  }
-
-  @override
-  void onDragEnd(int pointerId, DragEndInfo details) {
-    stopJoystick();
-    super.onDragEnd(pointerId, details);
-  }
-
-  @override
-  void onDragCancel(int pointerId) {
-    stopJoystick();
-    super.onDragCancel(pointerId);
-  }
-
-  stopJoystick() {
-    joystick.delta.setZero();
-    remove(joystick);
-  }
-
-  @override
-  Future<void> onLoad() async {
-    super.onLoad();
-    joystick = JoystickComponent(
-      knob: CircleComponent(
-        radius: 30,
-        paint: knobPaint,
-      ),
-      background: CircleComponent(radius: 100, paint: backgroundPaint),
-      position: Vector2(100, 100),
-      size: 15,
-    );
-    player = ShipPlayer(joystick);
-
-    var spriteSheet = await images.load('ninja_boy_glide_ss.png');
-    SpriteAnimationData animationData = SpriteAnimationData.sequenced(
-      amount: 10,
-      stepTime: 0.05,
-      textureSize: Vector2(1500 / 10, 150.0),
-    );
-    var ship = UserShip(
-      spriteSheet,
-      size: Vector2(150, 150),
-      animationData: animationData,
-      position: Vector2(200, 150),
-      anchor: Anchor.center,
-    );
-
-    add(player);
-  }
 }

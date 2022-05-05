@@ -1,10 +1,10 @@
-import 'package:dartz/dartz.dart';
+/*import 'package:dartz/dartz.dart';
 
 import '../../core/errors/failure.dart';
 import '../../core/usecases/usecase_without_param.dart';
 import '../entities/user.dart';
-import '../repositories/data_repository.dart';
-
+import '../repositories/data_repository.dart';*/
+/*
 class GetUser implements UseCaseWithOutParam<User> {
   final DataRepository repository;
 
@@ -15,3 +15,4 @@ class GetUser implements UseCaseWithOutParam<User> {
     return await repository.getUser();
   }
 }
+*/

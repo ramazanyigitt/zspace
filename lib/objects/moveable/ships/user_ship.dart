@@ -1,32 +1,65 @@
+import 'package:flame/components.dart';
+import 'package:zspace/objects/moveable/ships/ship.dart';
 import 'dart:ui' as ui;
 
-import 'package:flame/components.dart';
+class UserShip extends Ship {
+  /// Pixels/s
+  double maxSpeed = 300.0;
 
-import '../moveable_object.dart';
+  final JoystickComponent joystick;
+  final ui.Image image;
+  final Vector2 textureSize;
+  final int spriteAmount;
+  final double stepTime;
+  List<Vector2>? hitBox;
 
-class UserShip extends MoveableObject {
-  UserShip(
-    ui.Image image, {
-    SpriteAnimationData? animationData,
-    Vector2? position,
-    required Vector2 size,
-    double? angle,
-    Anchor? anchor,
-    int? priority,
+  UserShip({
+    required this.image,
+    required this.joystick,
+    required this.textureSize,
+    this.spriteAmount: 1,
+    this.stepTime: 0.1,
+    this.hitBox,
   }) : super(
           image,
-          animationData: animationData,
-          position: position,
-          size: size,
-          angle: angle,
-          anchor: anchor,
+          size: textureSize,
+          animationData: SpriteAnimationData.sequenced(
+            amount: 10,
+            stepTime: stepTime,
+            textureSize: textureSize,
+          ),
+          hitBox: hitBox,
         ) {
-    hitBox = [
-      Vector2(0.2, -1.0),
-      Vector2(-0.65, -0.1),
-      Vector2(-0.6, 0.8),
-      Vector2(0.6, 0.8),
-      Vector2(0.8, -0.1),
-    ];
+    anchor = Anchor.center;
+
+    if (hitBox == null)
+      hitBox = [
+        Vector2(0, -textureSize.y / 2),
+        Vector2(textureSize.x / 2, -textureSize.y / 2),
+        Vector2(textureSize.x / 2, textureSize.y / 2),
+        Vector2(-textureSize.x / 2, textureSize.y / 2),
+        Vector2(-textureSize.x / 2, -textureSize.y / 2),
+      ];
+  }
+
+  @override
+  Future<void> onLoad() async {
+    super.onLoad();
+    position = gameRef.size / 2;
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    if (!joystick.delta.isZero()) {
+      position.add(joystick.relativeDelta * maxSpeed * dt);
+      angle = joystick.delta.screenAngle();
+    }
+  }
+
+  @override
+  void render(ui.Canvas canvas) {
+    super.render(canvas);
+    //renderDebugMode(canvas);
   }
 }

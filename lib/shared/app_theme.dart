@@ -10,8 +10,8 @@ class AppTheme {
 
   final primaryBlueColor = Color.fromARGB(255, 42, 75, 160);
   final primaryDarkBlueColor = Color.fromARGB(255, 21, 48, 117);
-  final primaryColor = Color.fromARGB(255, 25, 202, 106);
-  final darkPrimaryColor = Color.fromARGB(255, 15, 163, 83);
+  final primaryColor = Color.fromARGB(255, 126, 16, 236);
+  final darkPrimaryColor = Color.fromARGB(255, 137, 81, 192);
   final secondaryColor = Color.fromARGB(255, 252, 134, 90);
   final accentFirstColor = Color.fromARGB(255, 255, 212, 103);
   final accentSecondColor = Color.fromARGB(255, 77, 99, 34);
@@ -29,10 +29,12 @@ class AppTheme {
   final bgColor = Color.fromARGB(255, 255, 255, 255);
   final gradientPrimary = LinearGradient(
     colors: [
-      Color.fromARGB(255, 15, 163, 83).withOpacity(0.85),
-      Color.fromARGB(255, 15, 163, 83).withOpacity(0.9),
-      Color.fromARGB(255, 15, 163, 83).withOpacity(1),
+      Color.fromARGB(170, 255, 225, 91),
+      Color.fromARGB(255, 161, 46, 255),
+      Color.fromARGB(255, 137, 81, 192),
     ],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
   );
 
   final headingText = GoogleFonts.inter(

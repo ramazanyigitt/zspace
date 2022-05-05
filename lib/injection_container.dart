@@ -1,6 +1,12 @@
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:rest_api_package/requests/rest_api_request.dart';
+import 'package:rest_api_package/rest_api_package.dart';
+import 'package:zspace/core/services/user_service.dart';
+import 'package:zspace/core/utils/lottie/lottie_cache.dart';
 import 'data/data_sources/local_json_data_source.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:cookie_jar/cookie_jar.dart';
 
 import 'core/platform/network_info.dart';
 import 'data/data_sources/http_data_source.dart';
@@ -41,9 +47,18 @@ Future<void> init() async {
   locator.registerLazySingleton<NetworkInfo>(
     () => NetworkInfoImpl(locator()),
   );
+  locator.registerLazySingleton<RestApiHttpService>(
+    () => RestApiHttpService(Dio(), DefaultCookieJar()),
+  );
 
   //!External
   locator.registerLazySingleton(
     () => InternetConnectionChecker(),
+  );
+  locator.registerLazySingleton(
+    () => LottieCache(),
+  );
+  locator.registerLazySingleton(
+    () => UserService(),
   );
 }

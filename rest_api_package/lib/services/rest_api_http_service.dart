@@ -1,14 +1,24 @@
 part of '../rest_api_package.dart';
 
-class RespApiHttpService {
-  Future<Options> prepareOptions({bool authorize = false}) async {
+class RestApiHttpService {
+  Map<String, String> publicHeaders = <String, String>{};
+  Dio dio;
+  DefaultCookieJar cookieJar;
+  RestApiHttpService(this.dio, this.cookieJar) {
+    log('Cookie interceptor adding');
+    dio.interceptors.add(CookieManager(cookieJar));
+    log('Cookie interceptor added');
+  }
+
+  Future<Options> prepareOptions({String? bearerToken}) async {
     final Map<String, String> headers = <String, String>{};
     headers.putIfAbsent(
         HttpHeaders.contentTypeHeader, () => 'application/json');
-    headers.putIfAbsent(HttpHeaders.acceptHeader, () => 'application/json');
+    //headers.putIfAbsent(HttpHeaders.acceptHeader, () => 'application/json');
 
-    if (authorize) {
-      //headers.putIfAbsent(HttpHeaders.authorizationHeader, () => UserService().getToken!);
+    if (bearerToken != null) {
+      headers.putIfAbsent(
+          HttpHeaders.authorizationHeader, () => 'Bearer $bearerToken');
     }
     return Options(
         headers: headers,
@@ -22,18 +32,25 @@ class RespApiHttpService {
     RestApiRequest apiRequest, {
     bool removeBaseUrl = false,
     required dynamic parseModel,
+    bool isRawJson = false,
   }) async {
     Response response = await request(apiRequest, removeBaseUrl: removeBaseUrl);
-    return handleResponse<T>(response, parseModel: parseModel);
+    return handleResponse<T>(response,
+        parseModel: parseModel, isRawJson: isRawJson);
   }
 
   Future<List<T>> requestAndHandleList<T>(
     RestApiRequest apiRequest, {
     bool removeBaseUrl = false,
     required dynamic parseModel,
+    bool isRawJson = false,
   }) async {
     Response response = await request(apiRequest, removeBaseUrl: removeBaseUrl);
-    return handleResponseList<T>(response, parseModel: parseModel);
+    return handleResponseList<T>(
+      response,
+      parseModel: parseModel,
+      isRawJson: isRawJson,
+    );
   }
 
   Future<Response> request(RestApiRequest apiRequest,
@@ -41,35 +58,102 @@ class RespApiHttpService {
     Response resp;
     String url = apiRequest.endPoint;
 
-    Options options = await prepareOptions(authorize: apiRequest.authorize);
+    Options options = await prepareOptions(bearerToken: apiRequest.bearerToken);
 
     try {
       if (apiRequest.requestMethod == RequestMethod.GET) {
-        resp = await Dio().get(
+        resp = await dio.get(
           url,
           options: options,
           queryParameters: apiRequest.queryParameters,
         );
       } else if (apiRequest.requestMethod == RequestMethod.PUT) {
-        resp = await Dio().put(
+        resp = await dio.put(
           url,
           options: options,
           data: apiRequest.body,
           queryParameters: apiRequest.queryParameters,
         );
       } else if (apiRequest.requestMethod == RequestMethod.POST) {
-        resp = await Dio().post(
+        resp = await dio.post(
           url,
           options: options,
           data: apiRequest.body,
           queryParameters: apiRequest.queryParameters,
         );
       } else if (apiRequest.requestMethod == RequestMethod.DELETE) {
-        resp = await Dio().delete(
+        resp = await dio.delete(
           url,
           options: options,
           queryParameters: apiRequest.queryParameters,
           data: apiRequest.body,
+        );
+      } else {
+        throw Exception("Error this request's method is undefined");
+      }
+    } on DioError catch (e) {
+      if (e.response != null) {
+        return e.response!;
+      }
+      throw Exception('DIO Error: $e');
+    }
+    return resp;
+  }
+
+  Future<T> requestFormAndHandle<T>(
+    RestApiRequest apiRequest, {
+    required dynamic parseModel,
+    bool isRawJson = false,
+  }) async {
+    Response response = await requestForm(apiRequest);
+    return handleResponse<T>(response,
+        parseModel: parseModel, isRawJson: isRawJson);
+  }
+
+  Future<List<T>> requestFormAndHandleList<T>(
+    RestApiRequest apiRequest, {
+    required dynamic parseModel,
+    bool isRawJson = false,
+  }) async {
+    Response response = await requestForm(apiRequest);
+    return handleResponseList<T>(response,
+        parseModel: parseModel, isRawJson: isRawJson);
+  }
+
+  Future<Response> requestForm(
+    RestApiRequest apiRequest,
+  ) async {
+    Response resp;
+    String url = apiRequest.endPoint;
+
+    Options options = await prepareOptions(bearerToken: apiRequest.bearerToken);
+
+    var formData = FormData();
+
+    apiRequest.body.forEach((key, value) {
+      formData.fields.add(MapEntry(key, value));
+    });
+
+    try {
+      if (apiRequest.requestMethod == RequestMethod.GET) {
+        resp = await dio.get(
+          url,
+          options: options,
+          queryParameters: apiRequest.queryParameters,
+        );
+      } else if (apiRequest.requestMethod == RequestMethod.PUT) {
+        resp = await dio.put(
+          url,
+          options: options,
+          data: formData,
+          queryParameters: apiRequest.queryParameters,
+        );
+      } else if (apiRequest.requestMethod == RequestMethod.POST) {
+        resp = await dio.post(
+          url,
+          options: options,
+          data: formData,
+          queryParameters: apiRequest.queryParameters,
         );
       } else {
         throw Exception("Error this request's method is undefined");
@@ -92,7 +176,7 @@ class RespApiHttpService {
     Response resp;
     String url = apiRequest.endPoint;
 
-    Options options = await prepareOptions(authorize: apiRequest.authorize);
+    Options options = await prepareOptions(bearerToken: apiRequest.bearerToken);
 
     var mfile = MultipartFile.fromBytes(
       file.readAsBytesSync(),
@@ -134,24 +218,33 @@ class RespApiHttpService {
     return resp;
   }
 
-  T handleResponse<T>(Response response, {required dynamic parseModel}) {
+  T handleResponse<T>(Response response,
+      {required dynamic parseModel, required bool isRawJson}) {
     if (response.statusCode == 200 || response.statusCode == 201) {
       try {
         final data = response.data;
+        if (isRawJson) {
+          return parseModel.fromRawJson(data);
+        }
         return parseModel.fromJson(data);
       } catch (e) {
-        return parseModel.fromJson({});
+        throw response;
       }
     } else {
-      return parseModel.fromJson({});
+      throw response;
     }
   }
 
   List<T> handleResponseList<T>(Response response,
-      {required dynamic parseModel}) {
+      {required dynamic parseModel, required bool isRawJson}) {
     if (response.statusCode == 200 || response.statusCode == 201) {
       try {
         final data = response.data;
+        log('Response data: $data');
+        if (isRawJson) {
+          final list = json.decode(data) as List;
+          return List<T>.from(list.map((x) => parseModel.fromJson(x)));
+        }
         return List<T>.from(data.map((x) => parseModel.fromJson(x)));
       } catch (e) {
         return parseModel.fromJson({});

@@ -3,17 +3,18 @@ import 'dart:developer';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:zspace/domain/entities/inventory_item.dart';
 import 'package:zspace/shared/app_theme.dart';
 
-class GridTest extends StatefulWidget {
-  const GridTest({Key? key}) : super(key: key);
+class InventoryPage extends StatefulWidget {
+  const InventoryPage({Key? key}) : super(key: key);
 
   @override
-  State<GridTest> createState() => _GridTestState();
+  State<InventoryPage> createState() => _InventoryPageState();
 }
 
-class _GridTestState extends State<GridTest> {
-  late List<Item> inventoryItems, tempList;
+class _InventoryPageState extends State<InventoryPage> {
+  late List<SlideItem> inventoryItems, tempList;
 
   late ValueNotifier<int?> selectingIndex;
   late int? selectedIndex;
@@ -26,7 +27,7 @@ class _GridTestState extends State<GridTest> {
     int index = 0;
     Colors.accents.forEach((element) {
       inventoryItems.add(
-        Item(
+        SlideItem(
           index,
           Color(element.value),
           '$index',
@@ -36,7 +37,7 @@ class _GridTestState extends State<GridTest> {
     });
     Colors.primaries.forEach((element) {
       inventoryItems.add(
-        Item(
+        SlideItem(
           index,
           Color(element.value),
           '$index',
@@ -159,7 +160,7 @@ class _GridTestState extends State<GridTest> {
                   onPressed: () {
                     setState(() {
                       inventoryItems.add(
-                        Item(
+                        SlideItem(
                           inventoryItems.length,
                           Colors.black,
                           '${inventoryItems.length}',
@@ -192,10 +193,10 @@ class _GridTestState extends State<GridTest> {
     );
   }
 
-  Widget draggableItemBox(Item item) {
+  Widget draggableItemBox(SlideItem item) {
     return wrapWithDragTargetBoxBuilder(
       targetItem: item,
-      child: LongPressDraggable<Item>(
+      child: LongPressDraggable<SlideItem>(
         delay: Duration(milliseconds: 150),
         maxSimultaneousDrags: 1,
         data: item,
@@ -306,8 +307,8 @@ class _GridTestState extends State<GridTest> {
   }
 
   Widget wrapWithDragTargetBoxBuilder(
-      {required Item targetItem, required Widget child}) {
-    return DragTarget<Item>(
+      {required SlideItem targetItem, required Widget child}) {
+    return DragTarget<SlideItem>(
       builder: (context, candidateData, rejectedData) {
         return buildDraggedNewItemBox(
             targetItem: targetItem, items: candidateData, defaultChild: child);
@@ -342,8 +343,8 @@ class _GridTestState extends State<GridTest> {
   }
 
   Widget buildDraggedNewItemBox(
-      {required Item targetItem,
-      required List<Item?> items,
+      {required SlideItem targetItem,
+      required List<SlideItem?> items,
       required Widget defaultChild}) {
     if (items.length > 0 && items[0]?.index != targetItem.index) {
       return TweenAnimationBuilder<double>(
@@ -392,11 +393,18 @@ class _GridTestState extends State<GridTest> {
   }
 }
 
-class Item {
+class SlideItem {
   final Color color;
   final String text;
   int index;
   bool isDragging;
+  InventoryItem? inventoryItem;
 
-  Item(this.index, this.color, this.text, {this.isDragging: false});
+  SlideItem(
+    this.index,
+    this.color,
+    this.text, {
+    this.isDragging: false,
+    this.inventoryItem,
+  });
 }

@@ -1,11 +1,12 @@
+import 'dart:developer';
 import 'dart:ui' as ui;
 import 'package:flame/components.dart';
 import 'package:flame/geometry.dart';
 import 'package:flutter/material.dart';
 
-class MoveableObject extends SpriteAnimationComponent
+class GameObject extends SpriteAnimationComponent
     with HasHitboxes, Collidable, HasGameRef {
-  MoveableObject(
+  GameObject(
     ui.Image image, {
     SpriteAnimationData? animationData,
     bool? removeOnFinish,
@@ -17,6 +18,7 @@ class MoveableObject extends SpriteAnimationComponent
     double? angle,
     Anchor? anchor,
     int? priority,
+    this.hitBox,
   }) : super.fromFrameData(
           image,
           animationData ??
@@ -36,13 +38,12 @@ class MoveableObject extends SpriteAnimationComponent
       this.paint = paint;
     }
   }
-
-  late List<Vector2> hitBox = [];
+  List<Vector2>? hitBox;
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    addHitbox(HitboxPolygon(hitBox));
+    addHitbox(HitboxPolygon(hitBox!));
   }
 
   @override

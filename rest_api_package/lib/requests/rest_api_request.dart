@@ -22,13 +22,13 @@ abstract class IRestApiRequest {
 class RestApiRequest {
   RestApiRequest({
     this.endPoint = "/",
-    this.authorize = false,
+    this.bearerToken,
     this.body = const {},
     this.queryParameters = const {},
     this.requestMethod = RequestMethod.GET,
   });
   String endPoint;
-  bool authorize;
+  String? bearerToken;
   Map<String, dynamic> queryParameters;
   Map<String, dynamic> body;
   RequestMethod requestMethod;
