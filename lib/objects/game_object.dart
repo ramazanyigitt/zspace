@@ -56,11 +56,11 @@ class GameObject extends SpriteAnimationComponent
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    animation?.getSprite().render(
+    /*animation?.getSprite().render(
           canvas,
           size: size,
           overridePaint: paint,
         );
-    renderHitboxes(canvas);
+    renderHitboxes(canvas);*/
   }
 }

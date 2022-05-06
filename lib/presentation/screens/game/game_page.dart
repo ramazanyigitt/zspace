@@ -1,23 +1,21 @@
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
-import 'package:flame/palette.dart';
-import 'package:flutter/material.dart';
-import 'package:zspace/objects/moveable/ships/user_ship.dart';
 import 'package:zspace/presentation/screens/game/game_viewmodel.dart';
+import 'package:zspace/presentation/widgets/overlay/lock_overlay.dart';
 
 class GamePage extends FlameGame
     with HasDraggables, HasTappables, HasCollidables {
-  late final UserShip player;
-  late final JoystickComponent joystick;
-  final knobPaint = BasicPalette.blue.withAlpha(200).paint();
-  final backgroundPaint = BasicPalette.blue.withAlpha(100).paint();
+  late GameViewModel viewModel;
+  GamePage() {
+    viewModel = GameViewModel(game: this);
+  }
 
   @override
   void onTapDown(int pointerId, TapDownInfo info) {
-    joystick.position =
+    viewModel.joystick.position =
         Vector2(info.eventPosition.global.x, info.eventPosition.global.y);
-    add(joystick);
+    add(viewModel.joystick);
     super.onTapDown(pointerId, info);
   }
 
@@ -29,7 +27,7 @@ class GamePage extends FlameGame
 
   @override
   void onDragStart(int pointerId, DragStartInfo details) {
-    joystick.position =
+    viewModel.joystick.position =
         Vector2(details.eventPosition.global.x, details.eventPosition.global.y);
     super.onDragStart(pointerId, details);
   }
@@ -47,14 +45,18 @@ class GamePage extends FlameGame
   }
 
   stopJoystick() {
-    joystick.delta.setZero();
-    remove(joystick);
+    viewModel.joystick.delta.setZero();
+    remove(viewModel.joystick);
   }
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    joystick = JoystickComponent(
+    LockOverlay().showClassicLoadingOverlay(buildAfterRebuild: true);
+    await viewModel.prepareGame().whenComplete(() {
+      //LockOverlay().closeOverlay();
+    });
+    /*joystick = JoystickComponent(
       knob: CircleComponent(
         radius: 30,
         paint: knobPaint,
@@ -72,6 +74,6 @@ class GamePage extends FlameGame
       spriteAmount: 10,
     );
 
-    add(player);
+    add(player);*/
   }
 }

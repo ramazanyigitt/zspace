@@ -8,37 +8,44 @@ class UserShip extends Ship {
 
   final JoystickComponent joystick;
   final ui.Image image;
+  final Vector2 shipSize;
   final Vector2 textureSize;
   final int spriteAmount;
   final double stepTime;
   List<Vector2>? hitBox;
+  final bool loop;
 
   UserShip({
     required this.image,
     required this.joystick,
+    required this.shipSize,
     required this.textureSize,
     this.spriteAmount: 1,
     this.stepTime: 0.1,
     this.hitBox,
+    this.loop: false,
+    bool playing: false,
   }) : super(
           image,
-          size: textureSize,
+          size: shipSize,
           animationData: SpriteAnimationData.sequenced(
-            amount: 10,
+            amount: spriteAmount,
             stepTime: stepTime,
             textureSize: textureSize,
+            loop: loop,
           ),
           hitBox: hitBox,
+          playing: playing,
         ) {
     anchor = Anchor.center;
 
     if (hitBox == null)
       hitBox = [
-        Vector2(0, -textureSize.y / 2),
-        Vector2(textureSize.x / 2, -textureSize.y / 2),
-        Vector2(textureSize.x / 2, textureSize.y / 2),
-        Vector2(-textureSize.x / 2, textureSize.y / 2),
-        Vector2(-textureSize.x / 2, -textureSize.y / 2),
+        Vector2(0, -shipSize.y / 2),
+        Vector2(shipSize.x / 2, -shipSize.y / 2),
+        Vector2(shipSize.x / 2, shipSize.y / 2),
+        Vector2(-shipSize.x / 2, shipSize.y / 2),
+        Vector2(-shipSize.x / 2, -shipSize.y / 2),
       ];
   }
 

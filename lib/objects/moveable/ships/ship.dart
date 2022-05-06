@@ -16,6 +16,7 @@ abstract class Ship extends GameObject {
     Anchor? anchor,
     int? priority,
     this.hitBox,
+    bool playing: false,
   }) : super(
           image,
           animationData: animationData,
@@ -24,6 +25,7 @@ abstract class Ship extends GameObject {
           angle: angle,
           anchor: anchor,
           hitBox: hitBox,
+          playing: playing,
         );
 
   double _speed = 300;
