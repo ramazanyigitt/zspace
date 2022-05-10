@@ -41,11 +41,10 @@ class UserShip extends Ship {
 
     if (hitBox == null)
       hitBox = [
-        Vector2(0, -shipSize.y / 2),
-        Vector2(shipSize.x / 2, -shipSize.y / 2),
-        Vector2(shipSize.x / 2, shipSize.y / 2),
-        Vector2(-shipSize.x / 2, shipSize.y / 2),
-        Vector2(-shipSize.x / 2, -shipSize.y / 2),
+        Vector2(-1, -1),
+        Vector2(-1, 1),
+        Vector2(1, 1),
+        Vector2(1, -1),
       ];
   }
 

@@ -47,6 +47,7 @@ flutter:
     assets:
         - assets/images/
         - assets/images/ships/
+        - assets/images/maps/
         - assets/lotties/
 
 

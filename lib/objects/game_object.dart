@@ -56,6 +56,8 @@ class GameObject extends SpriteAnimationComponent
   @override
   void render(Canvas canvas) {
     super.render(canvas);
+    renderHitboxes(canvas,
+        paint: ui.Paint()..color = Colors.green.withOpacity(0.55));
     /*animation?.getSprite().render(
           canvas,
           size: size,

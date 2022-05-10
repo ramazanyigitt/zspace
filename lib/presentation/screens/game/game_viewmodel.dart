@@ -1,16 +1,17 @@
-import 'dart:math';
+import 'dart:developer';
 
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/game.dart';
+import 'package:flame/geometry.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'package:stacked/stacked.dart';
 import 'package:zspace/objects/moveable/ships/user_ship.dart';
+import 'package:zspace/objects/unmoveable/game_map.dart';
 import 'package:zspace/presentation/screens/game/game_page.dart';
 import 'package:zspace/shared/app_images.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flame/collisions.dart';
 
 class GameViewModel extends BaseViewModel {
   GamePage game;
@@ -28,7 +29,7 @@ class GameViewModel extends BaseViewModel {
     //Map
 
     var mapImage = await game.images.load(AppImages.mapEpisode1Level1.gameMap);
-    var map = Map(mapImage);
+    var map = GameMap(mapImage, size: Vector2(738, 1312));
     game.add(map);
 
     //User
@@ -52,6 +53,7 @@ class GameViewModel extends BaseViewModel {
       textureSize: Vector2(550.0, 648.0),
       spriteAmount: 1,
       playing: true,
+
       //loop: true,
     );
 
@@ -61,32 +63,5 @@ class GameViewModel extends BaseViewModel {
 
     game.add(player);
     game.add(joystick);
-  }
-}
-
-class Map<T extends FlameGame> extends PositionComponent
-    with CollisionCallbacks, HasGameRef<T> {
-  @override
-  Future<void> onLoad() async {
-    await super.onLoad();
-    size = Vector2(738, 1312);
-    add(RectangleHitbox());
-  }
-
-  final _zeroVector = Vector2.zero();
-  @override
-  void update(double dt) {
-    super.update(dt);
-    position = gameRef.camera.unprojectVector(_zeroVector);
-  }
-
-  Rect get bounds => Rect.fromLTWH(0, 0, size.x, size.y);
-
-  final Image mapImage;
-  Map(this.mapImage) : super(priority: 0);
-
-  @override
-  void render(Canvas canvas) {
-    canvas.drawImage(mapImage, Offset.zero, Paint());
   }
 }
