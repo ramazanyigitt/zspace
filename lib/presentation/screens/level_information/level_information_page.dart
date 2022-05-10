@@ -53,7 +53,7 @@ class LevelInformationPage extends StatelessWidget {
                     child: Column(
                       children: [
                         Container(
-                          margin: EdgeInsets.symmetric(vertical: 20),
+                          margin: EdgeInsets.symmetric(vertical: 10),
                           alignment: Alignment.topCenter,
                           child: Text(
                             'Episode 1',
@@ -65,8 +65,8 @@ class LevelInformationPage extends StatelessWidget {
                         ),
                         Center(
                           child: Container(
-                            width: 150,
-                            height: 150,
+                            width: 130,
+                            height: 130,
                             child: Image.asset(
                               "assets/images/planet.png",
                               fit: BoxFit.scaleDown,
@@ -76,7 +76,7 @@ class LevelInformationPage extends StatelessWidget {
                         Column(
                           children: [
                             Container(
-                              margin: EdgeInsets.only(top: 80, bottom: 20),
+                              margin: EdgeInsets.only(top: 60, bottom: 10),
                               alignment: Alignment.topCenter,
                               child: Text(
                                 'Creatures',
@@ -112,7 +112,7 @@ class LevelInformationPage extends StatelessWidget {
                                 child: ThemeButton(
                                   text: "Başlat",
                                   width: 200,
-                                  height: 100,
+                                  height: 67,
                                   elevation: 0,
                                   onTap: () {
                                     viewModel.routeToGame();

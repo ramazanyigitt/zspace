@@ -4,12 +4,13 @@ import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Image;
 import 'package:stacked/stacked.dart';
 import 'package:zspace/objects/moveable/ships/user_ship.dart';
 import 'package:zspace/presentation/screens/game/game_page.dart';
 import 'package:zspace/shared/app_images.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flame/collisions.dart';
 
 class GameViewModel extends BaseViewModel {
   GamePage game;
@@ -25,7 +26,10 @@ class GameViewModel extends BaseViewModel {
     game.camera.viewport = FixedResolutionViewport(Vector2(1.sw, 1.sh));
 
     //Map
-    game.add(Map());
+
+    var mapImage = await game.images.load(AppImages.mapEpisode1Level1.gameMap);
+    var map = Map(mapImage);
+    game.add(map);
 
     //User
     joystick = JoystickComponent(
@@ -53,60 +57,36 @@ class GameViewModel extends BaseViewModel {
 
     //Camera set up
     game.camera.speed = 1;
-    game.camera.followComponent(player, worldBounds: Map.bounds);
+    game.camera.followComponent(player, worldBounds: map.bounds);
 
-    await game.add(player);
+    game.add(player);
+    game.add(joystick);
   }
-
-  isGameFinish() {}
-
-  isPlayerAlive() {}
-
-  routeToLevelInfoPage() {}
 }
 
-class Map extends Component {
-  static const double size = 1500;
-  static const Rect bounds = Rect.fromLTWH(-size, -size, 2 * size, 2 * size);
-
-  static final Paint _paintBorder = Paint()
-    ..color = Colors.white12
-    ..strokeWidth = 10
-    ..style = PaintingStyle.stroke;
-  static final Paint _paintBg = Paint()..color = const Color(0xFF333333);
-
-  static final _rng = Random();
-
-  late final List<Paint> _paintPool;
-  late final List<Rect> _rectPool;
-
-  Map() : super(priority: 0) {
-    _paintPool = List<Paint>.generate(
-      (size / 50).ceil(),
-      (_) => PaintExtension.random(rng: _rng)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2,
-      growable: false,
-    );
-    _rectPool = List<Rect>.generate(
-      (size / 50).ceil(),
-      (i) => Rect.fromCircle(center: Offset.zero, radius: size - i * 50),
-      growable: false,
-    );
+class Map<T extends FlameGame> extends PositionComponent
+    with CollisionCallbacks, HasGameRef<T> {
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    size = Vector2(738, 1312);
+    add(RectangleHitbox());
   }
+
+  final _zeroVector = Vector2.zero();
+  @override
+  void update(double dt) {
+    super.update(dt);
+    position = gameRef.camera.unprojectVector(_zeroVector);
+  }
+
+  Rect get bounds => Rect.fromLTWH(0, 0, size.x, size.y);
+
+  final Image mapImage;
+  Map(this.mapImage) : super(priority: 0);
 
   @override
   void render(Canvas canvas) {
-    // canvas.drawImageRect(image, offset, paint)
-    canvas.drawRect(bounds, _paintBg);
-    canvas.drawRect(bounds, _paintBorder);
-    for (var i = 0; i < (size / 50).ceil(); i++) {
-      canvas.drawCircle(Offset.zero, size - i * 50, _paintPool[i]);
-      canvas.drawRect(_rectPool[i], _paintBorder);
-    }
-  }
-
-  static double genCoord() {
-    return -size + _rng.nextDouble() * (2 * size);
+    canvas.drawImage(mapImage, Offset.zero, Paint());
   }
 }
