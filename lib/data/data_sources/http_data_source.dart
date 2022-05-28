@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:rest_api_package/requests/rest_api_request.dart';
 import 'package:rest_api_package/rest_api_package.dart';
-import 'package:zspace/data/models/market_item_model.dart';
-import 'package:zspace/data/models/inventory_item_model.dart';
-import 'package:zspace/injection_container.dart';
+import '../models/market_item_model.dart';
+import '../models/inventory_item_model.dart';
+import '../../injection_container.dart';
 import '../../core/errors/failure.dart';
 import '../../core/services/user_service.dart';
 import '../../domain/repositories/local_data_repository.dart';

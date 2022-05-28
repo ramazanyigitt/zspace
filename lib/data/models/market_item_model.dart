@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:zspace/data/models/energy_generator_model.dart';
-import 'package:zspace/data/models/level_model.dart';
-import 'package:zspace/data/models/shield_generator_model.dart';
-import 'package:zspace/data/models/ship_model.dart';
-import 'package:zspace/data/models/weapon_model.dart';
-import 'package:zspace/domain/entities/market_item.dart';
+import 'energy_generator_model.dart';
+import 'level_model.dart';
+import 'shield_generator_model.dart';
+import 'ship_model.dart';
+import 'weapon_model.dart';
+import '../../domain/entities/market_item.dart';
 
 class MarketItemModel extends MarketItem {
   MarketItemModel({

@@ -1,18 +1,4 @@
-import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:zspace/presentation/screens/episodes/episodes_page.dart';
-import 'package:zspace/presentation/screens/episodes/episodes_viewmodel.dart';
-import 'package:zspace/presentation/screens/game/game_page.dart';
-import 'package:zspace/presentation/screens/game/game_viewmodel.dart';
-import 'package:zspace/presentation/screens/inventory/inventory_page.dart';
-import 'package:zspace/presentation/screens/level_information/level_information_page.dart';
-import 'package:zspace/presentation/screens/level_information/level_information_viewmodel.dart';
-
-import 'package:zspace/presentation/screens/levels/levels_page.dart';
-import 'package:zspace/presentation/screens/levels/levels_viewmodel.dart';
-import 'package:zspace/presentation/screens/market/market_page.dart';
-import 'package:zspace/presentation/screens/settings/settings_page.dart';
-import 'package:zspace/presentation/screens/settings/settings_viewmodel.dart';
 
 class AppNavigator {
   static Future<T> push<T>({
@@ -89,41 +75,5 @@ class AppNavigator {
         ),
         (route) => false);
     return result;
-  }
-
-  pushGameScreen<T>({
-    required BuildContext context,
-    required Widget child,
-  }) async {
-    return AppNavigator.push(
-      context: context,
-      child: GameWidget(
-        game: GamePage(),
-      ),
-    );
-  }
-
-  pushInventoryScreen<T>(BuildContext context) async {
-    return AppNavigator.push(context: context, child: InventoryPage());
-  }
-
-  pushMarketScreen<T>(BuildContext context) async {
-    return AppNavigator.push(context: context, child: MarketPage());
-  }
-
-  pushSettingsScreen<T>(BuildContext context) async {
-    return AppNavigator.push(context: context, child: SettingsPage());
-  }
-
-  pushEpisodesScreen<T>(BuildContext context) async {
-    return AppNavigator.push(context: context, child: EpisodesPage());
-  }
-
-  pushLevelsScreen<T>(BuildContext context) async {
-    return AppNavigator.push(context: context, child: LevelsPage());
-  }
-
-  pushLevelInformationScreen<T>(BuildContext context) async {
-    return AppNavigator.push(context: context, child: LevelInformationPage());
   }
 }

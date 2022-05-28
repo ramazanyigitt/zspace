@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:zspace/data/models/market_item_model.dart';
-import 'package:zspace/domain/entities/inventory_item.dart';
+import 'market_item_model.dart';
+import '../../domain/entities/inventory_item.dart';
 
 class InventoryItemModel extends InventoryItem {
   InventoryItemModel({

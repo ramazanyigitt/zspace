@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:zspace/domain/entities/weapon.dart';
+import '../../domain/entities/weapon.dart';
 
 class WeaponModel extends Weapon {
   WeaponModel({

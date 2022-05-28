@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:zspace/domain/entities/energy_generator.dart';
-import 'package:zspace/domain/entities/level.dart';
-import 'package:zspace/domain/entities/shield_generator.dart';
-import 'package:zspace/domain/entities/ship.dart';
-import 'package:zspace/domain/entities/weapon.dart';
+import 'energy_generator.dart';
+import 'level.dart';
+import 'shield_generator.dart';
+import 'ship.dart';
+import 'weapon.dart';
 
 class MarketItem extends Equatable {
   MarketItem({

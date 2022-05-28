@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:zspace/domain/entities/ship.dart';
+import '../../domain/entities/ship.dart';
 
 class ShipModel extends Ship {
   ShipModel({

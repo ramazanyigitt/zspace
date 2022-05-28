@@ -1,21 +1,21 @@
 import 'dart:ui' as ui;
 
 import 'package:flame/components.dart';
-import 'package:zspace/objects/game_object.dart';
+import '../game_object.dart';
 
 abstract class Station extends GameObject {
   List<Vector2>? hitBox;
-  Station(
-    ui.Image image, {
+  Station({
+    ui.Image? image,
     SpriteAnimationData? animationData,
     Vector2? position,
-    required Vector2 size,
+    Vector2? size,
     double? angle,
     Anchor? anchor,
     int? priority,
     this.hitBox,
   }) : super(
-          image,
+          image: image,
           animationData: animationData,
           position: position,
           size: size,

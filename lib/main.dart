@@ -1,15 +1,8 @@
-import 'package:flame/components.dart' hide Draggable;
-import 'package:flame/game.dart';
-import 'package:flame/input.dart';
-import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zspace/objects/moveable/ships/user_ship.dart';
-import 'package:zspace/presentation/screens/main_menu/main_menu_page.dart';
-import 'package:zspace/presentation/screens/main_menu/main_menu_viewmodel.dart';
-import 'package:zspace/presentation/screens/splash/splash_page.dart';
-import 'package:zspace/shared/app_theme.dart';
+import 'package:zspace/features/splash/splash/splash_page.dart';
+import 'shared/app_theme.dart';
 import 'data/localization/messages.dart';
 import 'injection_container.dart' as di;
 

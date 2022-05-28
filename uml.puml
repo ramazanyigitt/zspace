@@ -1,0 +1,1433 @@
+@startuml
+set namespaceSeparator ::
+
+abstract class "zspace::core::base::base_state.dart::BaseState" {
+  +ThemeData themeData
+  +double dynamicHeight()
+  +double dyanmicWidth()
+}
+
+"zspace::core::base::base_state.dart::BaseState" o-- "flutter::src::material::theme_data.dart::ThemeData"
+"flutter::src::widgets::framework.dart::State" <|-- "zspace::core::base::base_state.dart::BaseState"
+
+abstract class "zspace::core::base::base_viewmodel.dart::BaseViewModel" {
+  +BuildContext? context
+  +void init()
+}
+
+"zspace::core::base::base_viewmodel.dart::BaseViewModel" o-- "flutter::src::widgets::framework.dart::BuildContext"
+"get::get_state_manager::src::simple::get_controllers.dart::GetxController" <|-- "zspace::core::base::base_viewmodel.dart::BaseViewModel"
+
+class "zspace::core::base::base_widget.dart::BaseView" {
+  +Widget Function(BuildContext, T) onPageBuilder
+  +T viewModel
+  +dynamic Function(T) onModelReady
+  +void Function()? onDispose
+  +_BaseViewState<T> createState()
+}
+
+"zspace::core::base::base_widget.dart::BaseView" o-- "null::Widget Function(BuildContext, T)"
+"zspace::core::base::base_widget.dart::BaseView" o-- "null::dynamic Function(T)"
+"zspace::core::base::base_widget.dart::BaseView" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "zspace::core::base::base_widget.dart::BaseView"
+
+class "zspace::core::base::base_widget.dart::_BaseViewState" {
+  +T model
+  +void initState()
+  +void dispose()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "zspace::core::base::base_widget.dart::_BaseViewState"
+
+class "zspace::core::errors::exception.dart::ServerException" {
+}
+
+"dart::core::Exception" <|-- "zspace::core::errors::exception.dart::ServerException"
+
+class "zspace::core::errors::exception.dart::CacheException" {
+}
+
+"dart::core::Exception" <|-- "zspace::core::errors::exception.dart::CacheException"
+
+abstract class "zspace::core::errors::failure.dart::Failure" {
+  +List<dynamic> properties
+  +List<Object?> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "zspace::core::errors::failure.dart::Failure"
+
+class "zspace::core::errors::failure.dart::ServerFailure" {
+  +String? errorMessage
+}
+
+"zspace::core::errors::failure.dart::Failure" <|-- "zspace::core::errors::failure.dart::ServerFailure"
+
+class "zspace::core::errors::failure.dart::CacheFailure" {
+}
+
+"zspace::core::errors::failure.dart::Failure" <|-- "zspace::core::errors::failure.dart::CacheFailure"
+
+class "zspace::core::errors::failure.dart::DeletedFileFailure" {
+}
+
+"zspace::core::errors::failure.dart::Failure" <|-- "zspace::core::errors::failure.dart::DeletedFileFailure"
+
+abstract class "zspace::core::platform::network_info.dart::NetworkInfo" {
+  +Future<bool> isConnected
+  +void onInternetChange()
+}
+
+class "zspace::core::platform::network_info.dart::NetworkInfoImpl" {
+  +InternetConnectionChecker connectionChecker
+  +Future<bool> isConnected
+  +void onInternetChange()
+}
+
+"zspace::core::platform::network_info.dart::NetworkInfoImpl" o-- "internet_connection_checker::internet_connection_checker.dart::InternetConnectionChecker"
+"zspace::core::platform::network_info.dart::NetworkInfo" <|-- "zspace::core::platform::network_info.dart::NetworkInfoImpl"
+
+class "zspace::core::services::user_service.dart::UserService" {
+  +UserModel? user
+  +UserModel? getUser()
+  +Future<void> setUser()
+}
+
+"zspace::core::services::user_service.dart::UserService" o-- "zspace::data::models::user_model.dart::UserModel"
+
+class "zspace::core::services::validator_service.dart::ValidatorService" {
+  +String? onlyNumber()
+  +String? onlyDouble()
+  +String? onlyText()
+  +String? phoneNumber()
+  +String? onlyRequired()
+  +String? email()
+  +String? phoneNumberWith1To12()
+  +Future<String?> validateEmailWhenStop()
+}
+
+abstract class "zspace::core::usecases::usecase_without_param.dart::UseCaseWithOutParam" {
+  +Future<Either<Failure, Type>> call()
+}
+
+abstract class "zspace::core::usecases::usecase_with_param.dart::UseCaseWithParam" {
+  +Future<Either<Failure, Type>> call()
+}
+
+class "zspace::core::utils::lottie::lottie_cache.dart::LottieCache" {
+  -Map<String, LottieComposition> _compositions
+  +Future<void> add()
+  +Widget load()
+}
+
+class "zspace::core::utils::router::app_navigator.dart::AppNavigator" {
+  {static} +Future<T> push()
+  {static} +Future<T> pushWithFadeIn()
+  {static} +Future<T> pushWithOutAnim()
+  {static} +Future<T> pushReplacement()
+  {static} +Future<T> pushAndRemoveUntil()
+}
+
+class "zspace::core::utils::router::app_router.dart::AppRouter" {
+  {static} -AppRouter _instance
+  +TabController tabController
+  +GlobalKey<NavigatorState>? mainNavigatorKey
+}
+
+"zspace::core::utils::router::app_router.dart::AppRouter" o-- "zspace::core::utils::router::app_router.dart::AppRouter"
+"zspace::core::utils::router::app_router.dart::AppRouter" o-- "flutter::src::material::tab_controller.dart::TabController"
+"zspace::core::utils::router::app_router.dart::AppRouter" o-- "flutter::src::widgets::framework.dart::GlobalKey<NavigatorState>"
+
+class "zspace::data::data_sources::http_data_source.dart::HttpDataSource" {
+  +String baseUrl
+  +Future<bool> buyItem()
+  +Future<bool> equipItem()
+  +Future<List<InventoryItemModel>> getEquippedInventory()
+  +Future<List<InventoryItemModel>> getInventory()
+  +Future<List<MarketItemModel>> getMarketItems()
+  +Future<UserModel> getProfile()
+  +Future<UserModel> login()
+  +Future<UserModel> register()
+  +Future<bool> sellItem()
+  +Future<bool> unEquipItem()
+}
+
+"zspace::domain::repositories::remote_data_repository.dart::RemoteDataRepository" <|-- "zspace::data::data_sources::http_data_source.dart::HttpDataSource"
+
+class "zspace::data::data_sources::local_json_data_source.dart::JsonLocalDataSource" {
+  +Future<void> deleteUser()
+  +Future<bool> equipItem()
+  +Future<List<InventoryItemModel>> getEquippedInventory()
+  +Future<List<InventoryItemModel>> getInventory()
+  +Future<List<MarketItemModel>> getMarketItems()
+  +Future<UserModel> getUser()
+  +Future<void> saveEquippedInventory()
+  +Future<void> saveInventory()
+  +Future<void> saveMarketItems()
+  +Future<void> saveUser()
+  +Future<bool> unEquipItem()
+}
+
+"zspace::domain::repositories::local_data_repository.dart::LocalDataRepository" <|-- "zspace::data::data_sources::local_json_data_source.dart::JsonLocalDataSource"
+
+class "zspace::data::enums::creature_types.dart::_CreatureTypeExtension" {
+  {static} +List<String> creatureTypes
+}
+
+class "zspace::data::enums::creature_types.dart::CreatureType" {
+  +int index
+  {static} +List<CreatureType> values
+  {static} +CreatureType Nemertea
+  {static} +CreatureType Tuhit
+  {static} +CreatureType Korath
+  {static} +CreatureType Rhapsody
+  {static} +CreatureType Bastion
+  {static} +CreatureType Ural
+  {static} +CreatureType Peacock
+  {static} +CreatureType Spitfire
+  {static} +CreatureType Plaiedes
+  {static} +CreatureType Deonida
+  {static} +CreatureType Tyrant
+  {static} +CreatureType Intrepid
+  {static} +CreatureType Titan
+  {static} +CreatureType Patriot
+  {static} +CreatureType Xiphos
+  {static} +CreatureType Xerxes
+  {static} +CreatureType Daedalus
+  {static} +CreatureType Kestrel
+  {static} +CreatureType Mantis
+  {static} +CreatureType MantisPrime
+  {static} +CreatureType Onyx
+  {static} +CreatureType Phoenix
+  {static} +CreatureType Leviathan
+  {static} +CreatureType Kaiser
+  {static} +CreatureType Numitor
+  {static} +CreatureType Etch
+  {static} +CreatureType Hyperion
+}
+
+"zspace::data::enums::creature_types.dart::CreatureType" o-- "zspace::data::enums::creature_types.dart::CreatureType"
+"dart::core::Enum" <|-- "zspace::data::enums::creature_types.dart::CreatureType"
+
+class "zspace::data::enums::win_point_category.dart::_MarketCategoryExtension" {
+  {static} +List<String> categories
+}
+
+class "zspace::data::enums::win_point_category.dart::MarketCategory" {
+  +int index
+  {static} +List<MarketCategory> values
+  {static} +MarketCategory All
+  {static} +MarketCategory Ship
+  {static} +MarketCategory Weapon
+  {static} +MarketCategory EnergyGenerator
+  {static} +MarketCategory ShieldGenerator
+}
+
+"zspace::data::enums::win_point_category.dart::MarketCategory" o-- "zspace::data::enums::win_point_category.dart::MarketCategory"
+"dart::core::Enum" <|-- "zspace::data::enums::win_point_category.dart::MarketCategory"
+
+class "zspace::data::enums::win_point_category.dart::MarketDirection" {
+  +int index
+  {static} +List<MarketDirection> values
+  {static} +MarketDirection asc
+  {static} +MarketDirection desc
+}
+
+"zspace::data::enums::win_point_category.dart::MarketDirection" o-- "zspace::data::enums::win_point_category.dart::MarketDirection"
+"dart::core::Enum" <|-- "zspace::data::enums::win_point_category.dart::MarketDirection"
+
+class "zspace::data::localization::messages.dart::Messages" {
+  +Map<String, Map<String, String>> keys
+}
+
+"get::get_navigation::src::root::internacionalization.dart::Translations" <|-- "zspace::data::localization::messages.dart::Messages"
+
+class "zspace::data::models::energy_generator_model.dart::EnergyGeneratorModel" {
+  +int? id
+  +int? shipSpeed
+  +DateTime? createdAt
+  +DateTime? updatedAt
+  +int? itemId
+  +dynamic fromRawJson()
+  +String toRawJson()
+  +dynamic fromJson()
+  +Map<String, dynamic> toJson()
+}
+
+"zspace::domain::entities::energy_generator.dart::EnergyGenerator" <|-- "zspace::data::models::energy_generator_model.dart::EnergyGeneratorModel"
+
+class "zspace::data::models::episode_model.dart::EpisodeModel" {
+  +String? name
+  +List<LevelModel>? levels
+  +dynamic fromJson()
+  +Map<String, dynamic> toJson()
+  +String toString()
+}
+
+"zspace::domain::entities::episode.dart::Episode" <|-- "zspace::data::models::episode_model.dart::EpisodeModel"
+
+class "zspace::data::models::inventory_item_model.dart::InventoryItemModel" {
+  +int? id
+  +int? itemId
+  +int? userId
+  +bool? isEquipped
+  +DateTime? createdAt
+  +DateTime? updatedAt
+  +MarketItemModel? item
+  +dynamic fromRawJson()
+  +String toRawJson()
+  +dynamic fromJson()
+  +Map<String, dynamic> toJson()
+}
+
+"zspace::data::models::inventory_item_model.dart::InventoryItemModel" o-- "zspace::data::models::market_item_model.dart::MarketItemModel"
+"zspace::domain::entities::inventory_item.dart::InventoryItem" <|-- "zspace::data::models::inventory_item_model.dart::InventoryItemModel"
+
+class "zspace::data::models::level_model.dart::LevelModel" {
+  +int? level
+  +int? episodeId
+  +List<CreatureType>? creatureTypes
+  +dynamic fromRawJson()
+  +String toRawJson()
+  +dynamic fromJson()
+  +Map<String, dynamic> toJson()
+}
+
+"zspace::domain::entities::level.dart::Level" <|-- "zspace::data::models::level_model.dart::LevelModel"
+
+class "zspace::data::models::market_item_model.dart::MarketItemModel" {
+  +int? id
+  +String? name
+  +int? buyPrice
+  +int? sellPrice
+  +int? stock
+  +bool? isActive
+  +bool? isSalable
+  +String? description
+  +String? imageUrl
+  +int? levelId
+  +DateTime? createdAt
+  +DateTime? updatedAt
+  +String? category
+  +WeaponModel? weapon
+  +EnergyGeneratorModel? energyGenerator
+  +ShieldGeneratorModel? shieldGenerator
+  +ShipModel? ship
+  +LevelModel? level
+  +dynamic fromRawJson()
+  +String toRawJson()
+  +dynamic fromJson()
+  +Map<String, dynamic> toJson()
+}
+
+"zspace::data::models::market_item_model.dart::MarketItemModel" o-- "zspace::data::models::weapon_model.dart::WeaponModel"
+"zspace::data::models::market_item_model.dart::MarketItemModel" o-- "zspace::data::models::energy_generator_model.dart::EnergyGeneratorModel"
+"zspace::data::models::market_item_model.dart::MarketItemModel" o-- "zspace::data::models::shield_generator_model.dart::ShieldGeneratorModel"
+"zspace::data::models::market_item_model.dart::MarketItemModel" o-- "zspace::data::models::ship_model.dart::ShipModel"
+"zspace::data::models::market_item_model.dart::MarketItemModel" o-- "zspace::data::models::level_model.dart::LevelModel"
+"zspace::domain::entities::market_item.dart::MarketItem" <|-- "zspace::data::models::market_item_model.dart::MarketItemModel"
+
+class "zspace::data::models::shield_generator_model.dart::ShieldGeneratorModel" {
+  +int? id
+  +int? shieldAmount
+  +int? absorb
+  +DateTime? createdAt
+  +DateTime? updatedAt
+  +int? itemId
+  +dynamic fromRawJson()
+  +String toRawJson()
+  +dynamic fromJson()
+  +Map<String, dynamic> toJson()
+}
+
+"zspace::domain::entities::shield_generator.dart::ShieldGenerator" <|-- "zspace::data::models::shield_generator_model.dart::ShieldGeneratorModel"
+
+class "zspace::data::models::ship_model.dart::ShipModel" {
+  +int? id
+  +int? armor
+  +int? speed
+  +int? power
+  +int? shield
+  +int? attack
+  +DateTime? createdAt
+  +DateTime? updatedAt
+  +int? itemId
+  +dynamic fromRawJson()
+  +String toRawJson()
+  +dynamic fromJson()
+  +Map<String, dynamic> toJson()
+}
+
+"zspace::domain::entities::ship.dart::Ship" <|-- "zspace::data::models::ship_model.dart::ShipModel"
+
+class "zspace::data::models::user_model.dart::UserModel" {
+  +int? id
+  +String? userName
+  +String? emailAddress
+  +String? phoneNumber
+  +int? credit
+  +int? levelId
+  +dynamic roleUser
+  +DateTime? createdAt
+  +DateTime? lastLogin
+  +String? accessToken
+  +dynamic fromRawJson()
+  +String toRawJson()
+  +dynamic fromJson()
+  +Map<String, dynamic> toJson()
+}
+
+"zspace::domain::entities::user.dart::User" <|-- "zspace::data::models::user_model.dart::UserModel"
+
+class "zspace::data::models::weapon_model.dart::WeaponModel" {
+  +int? id
+  +int? damage
+  +int? attackSpeed
+  +DateTime? createdAt
+  +DateTime? updatedAt
+  +int? itemId
+  +dynamic fromRawJson()
+  +String toRawJson()
+  +dynamic fromJson()
+  +Map<String, dynamic> toJson()
+}
+
+"zspace::domain::entities::weapon.dart::Weapon" <|-- "zspace::data::models::weapon_model.dart::WeaponModel"
+
+class "zspace::data::provider::data_provider.dart::DataProvider" {
+  +RemoteDataRepository remoteDataSource
+  +LocalDataRepository localDataSource
+  +NetworkInfo networkInfo
+  -Future<Either<Failure, T>> _getDataList()
+  +Future<Either<Failure, bool>> buyItem()
+  +Future<Either<Failure, bool>> equipItem()
+  +Future<Either<Failure, List<InventoryItem>>> getEquippedInventory()
+  +Future<Either<Failure, List<InventoryItem>>> getInventory()
+  +Future<Either<Failure, List<MarketItemModel>>> getMarketItems()
+  +Future<Either<Failure, UserModel>> getProfile()
+  +Future<Either<Failure, UserModel>> login()
+  +Future<Either<Failure, User>> register()
+  +Future<Either<Failure, bool>> sellItem()
+  +Future<Either<Failure, bool>> unEquipItem()
+}
+
+"zspace::data::provider::data_provider.dart::DataProvider" o-- "zspace::domain::repositories::remote_data_repository.dart::RemoteDataRepository"
+"zspace::data::provider::data_provider.dart::DataProvider" o-- "zspace::domain::repositories::local_data_repository.dart::LocalDataRepository"
+"zspace::data::provider::data_provider.dart::DataProvider" o-- "zspace::core::platform::network_info.dart::NetworkInfo"
+"zspace::domain::repositories::data_repository.dart::DataRepository" <|-- "zspace::data::provider::data_provider.dart::DataProvider"
+
+class "zspace::domain::entities::energy_generator.dart::EnergyGenerator" {
+  +int? id
+  +int? shipSpeed
+  +DateTime? createdAt
+  +DateTime? updatedAt
+  +int? itemId
+  +List<Object?> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "zspace::domain::entities::energy_generator.dart::EnergyGenerator"
+
+class "zspace::domain::entities::episode.dart::Episode" {
+  +String? name
+  +List<Level>? levels
+  +List<Object?> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "zspace::domain::entities::episode.dart::Episode"
+
+class "zspace::domain::entities::inventory_item.dart::InventoryItem" {
+  +int? id
+  +int? itemId
+  +int? userId
+  +bool? isEquipped
+  +DateTime? createdAt
+  +DateTime? updatedAt
+  +MarketItemModel? item
+  +List<Object?> props
+}
+
+"zspace::domain::entities::inventory_item.dart::InventoryItem" o-- "zspace::data::models::market_item_model.dart::MarketItemModel"
+"equatable::src::equatable.dart::Equatable" <|-- "zspace::domain::entities::inventory_item.dart::InventoryItem"
+
+class "zspace::domain::entities::level.dart::Level" {
+  +int? level
+  +int? episodeId
+  +List<CreatureType>? creatureTypes
+  +List<Object?> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "zspace::domain::entities::level.dart::Level"
+
+class "zspace::domain::entities::market_item.dart::MarketItem" {
+  +int? id
+  +String? name
+  +int? buyPrice
+  +int? sellPrice
+  +int? stock
+  +bool? isActive
+  +bool? isSalable
+  +String? description
+  +String? imageUrl
+  +int? levelId
+  +DateTime? createdAt
+  +DateTime? updatedAt
+  +String? category
+  +Weapon? weapon
+  +EnergyGenerator? energyGenerator
+  +ShieldGenerator? shieldGenerator
+  +Ship? ship
+  +Level? level
+  +List<Object?> props
+}
+
+"zspace::domain::entities::market_item.dart::MarketItem" o-- "zspace::domain::entities::weapon.dart::Weapon"
+"zspace::domain::entities::market_item.dart::MarketItem" o-- "zspace::domain::entities::energy_generator.dart::EnergyGenerator"
+"zspace::domain::entities::market_item.dart::MarketItem" o-- "zspace::domain::entities::shield_generator.dart::ShieldGenerator"
+"zspace::domain::entities::market_item.dart::MarketItem" o-- "zspace::domain::entities::ship.dart::Ship"
+"zspace::domain::entities::market_item.dart::MarketItem" o-- "zspace::domain::entities::level.dart::Level"
+"equatable::src::equatable.dart::Equatable" <|-- "zspace::domain::entities::market_item.dart::MarketItem"
+
+class "zspace::domain::entities::shield_generator.dart::ShieldGenerator" {
+  +int? id
+  +int? shieldAmount
+  +int? absorb
+  +DateTime? createdAt
+  +DateTime? updatedAt
+  +int? itemId
+  +List<Object?> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "zspace::domain::entities::shield_generator.dart::ShieldGenerator"
+
+class "zspace::domain::entities::ship.dart::Ship" {
+  +int? id
+  +int? armor
+  +int? speed
+  +int? power
+  +int? shield
+  +int? attack
+  +DateTime? createdAt
+  +DateTime? updatedAt
+  +int? itemId
+  +List<Object?> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "zspace::domain::entities::ship.dart::Ship"
+
+class "zspace::domain::entities::user.dart::User" {
+  +int? id
+  +String? userName
+  +String? emailAddress
+  +String? phoneNumber
+  +int? credit
+  +int? levelId
+  +dynamic roleUser
+  +DateTime? createdAt
+  +DateTime? lastLogin
+  +String? accessToken
+  +List<Object?> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "zspace::domain::entities::user.dart::User"
+
+class "zspace::domain::entities::weapon.dart::Weapon" {
+  +int? id
+  +int? damage
+  +int? attackSpeed
+  +DateTime? createdAt
+  +DateTime? updatedAt
+  +int? itemId
+  +List<Object?> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "zspace::domain::entities::weapon.dart::Weapon"
+
+abstract class "zspace::domain::repositories::data_repository.dart::DataRepository" {
+  +Future<Either<Failure, User>> register()
+  +Future<Either<Failure, User>> login()
+  +Future<Either<Failure, User>> getProfile()
+  +Future<Either<Failure, List<InventoryItem>>> getInventory()
+  +Future<Either<Failure, List<InventoryItem>>> getEquippedInventory()
+  +Future<Either<Failure, bool>> equipItem()
+  +Future<Either<Failure, bool>> unEquipItem()
+  +Future<Either<Failure, bool>> buyItem()
+  +Future<Either<Failure, bool>> sellItem()
+  +Future<Either<Failure, List<MarketItem>>> getMarketItems()
+}
+
+abstract class "zspace::domain::repositories::local_data_repository.dart::LocalDataRepository" {
+  +Future<UserModel> getUser()
+  +Future<void> saveUser()
+  +Future<void> deleteUser()
+  +Future<void> saveInventory()
+  +Future<List<InventoryItemModel>> getInventory()
+  +Future<void> saveEquippedInventory()
+  +Future<List<InventoryItemModel>> getEquippedInventory()
+  +Future<bool> equipItem()
+  +Future<bool> unEquipItem()
+  +Future<void> saveMarketItems()
+  +Future<List<MarketItemModel>> getMarketItems()
+}
+
+abstract class "zspace::domain::repositories::remote_data_repository.dart::RemoteDataRepository" {
+  +Future<UserModel> register()
+  +Future<UserModel> login()
+  +Future<UserModel> getProfile()
+  +Future<List<InventoryItemModel>> getInventory()
+  +Future<List<InventoryItemModel>> getEquippedInventory()
+  +Future<bool> equipItem()
+  +Future<bool> unEquipItem()
+  +Future<bool> buyItem()
+  +Future<bool> sellItem()
+  +Future<List<MarketItemModel>> getMarketItems()
+}
+
+class "zspace::domain::usecases::get_user.dart::GetUser" {
+  +DataRepository repository
+  +Future<Either<Failure, User>> call()
+}
+
+"zspace::domain::usecases::get_user.dart::GetUser" o-- "zspace::domain::repositories::data_repository.dart::DataRepository"
+"zspace::core::usecases::usecase_without_param.dart::UseCaseWithOutParam" <|-- "zspace::domain::usecases::get_user.dart::GetUser"
+
+class "zspace::objects::game_object.dart::GameObject" {
+  +List<Vector2>? hitBox
+  +Future<void> onLoad()
+  +void update()
+  +void render()
+}
+
+"flame::src::components::sprite_animation_component.dart::SpriteAnimationComponent" <|-- "zspace::objects::game_object.dart::GameObject"
+"flame::src::collisions::collision_callbacks.dart::CollisionCallbacks" <|-- "zspace::objects::game_object.dart::GameObject"
+"flame::src::components::mixins::has_game_ref.dart::HasGameRef" <|-- "zspace::objects::game_object.dart::GameObject"
+
+abstract class "zspace::objects::moveable::lasers::laser.dart::Laser" {
+  +List<Vector2>? hitBox
+  -double _speed
+  -double _damage
+  +dynamic getSpeed()
+  +dynamic getDamage()
+  +dynamic setSpeed()
+  +dynamic setDamage()
+}
+
+"zspace::objects::game_object.dart::GameObject" <|-- "zspace::objects::moveable::lasers::laser.dart::Laser"
+
+abstract class "zspace::objects::moveable::rockets::rocket.dart::Rocket" {
+  +List<Vector2>? hitBox
+  -double _speed
+  -double _damage
+  +dynamic getSpeed()
+  +dynamic getDamage()
+  +dynamic setSpeed()
+  +dynamic setDamage()
+}
+
+"zspace::objects::game_object.dart::GameObject" <|-- "zspace::objects::moveable::rockets::rocket.dart::Rocket"
+
+abstract class "zspace::objects::moveable::ships::ship.dart::Ship" {
+  +List<Vector2>? hitBox
+  -double _speed
+  -double _armor
+  -double _maxArmor
+  -double _shield
+  +dynamic getShield()
+  +dynamic getArmor()
+  +dynamic getMaxArmor()
+  +dynamic getSpeed()
+  +dynamic setShield()
+  +dynamic setArmor()
+  +dynamic setMaxArmor()
+  +dynamic setSpeed()
+}
+
+"zspace::objects::game_object.dart::GameObject" <|-- "zspace::objects::moveable::ships::ship.dart::Ship"
+
+class "zspace::objects::moveable::ships::user_ship.dart::UserShip" {
+  +double maxSpeed
+  +JoystickComponent joystick
+  +Image image
+  +Vector2 shipSize
+  +Vector2 textureSize
+  +int spriteAmount
+  +double stepTime
+  +List<Vector2>? hitBox
+  +bool loop
+  +Future<void> onLoad()
+  +void update()
+  +void render()
+}
+
+"zspace::objects::moveable::ships::user_ship.dart::UserShip" o-- "flame::src::components::input::joystick_component.dart::JoystickComponent"
+"zspace::objects::moveable::ships::user_ship.dart::UserShip" o-- "dart::ui::Image"
+"zspace::objects::moveable::ships::user_ship.dart::UserShip" o-- "vector_math::vector_math_64.dart::Vector2"
+"zspace::objects::moveable::ships::ship.dart::Ship" <|-- "zspace::objects::moveable::ships::user_ship.dart::UserShip"
+
+class "zspace::objects::solid_object.dart::CollisionDirection" {
+  +int index
+  {static} +List<CollisionDirection> values
+  {static} +CollisionDirection TOP
+  {static} +CollisionDirection LEFT
+  {static} +CollisionDirection RIGHT
+  {static} +CollisionDirection BOTTOM
+  {static} +CollisionDirection NONE
+}
+
+"zspace::objects::solid_object.dart::CollisionDirection" o-- "zspace::objects::solid_object.dart::CollisionDirection"
+"dart::core::Enum" <|-- "zspace::objects::solid_object.dart::CollisionDirection"
+
+abstract class "zspace::objects::solid_object.dart::SolidObject" {
+  +void onCollision()
+  -List<CollisionDirection> _getCollisionDirection()
+  +void onCollisionEnd()
+}
+
+abstract class "zspace::objects::unmoveable::explosion.dart::Explosion" {
+  +List<Vector2>? hitBox
+  -double _explosionMilliseconds
+  -double _damage
+  -double _explosionRadius
+  +double explosionMilliseconds
+  +double damage
+  +double explosionRadius
+}
+
+"zspace::objects::game_object.dart::GameObject" <|-- "zspace::objects::unmoveable::explosion.dart::Explosion"
+
+class "zspace::objects::unmoveable::game_map.dart::GameMap" {
+  +Image image
+  +Rect bounds
+  +Future<void> onLoad()
+  +void update()
+  +void render()
+}
+
+"zspace::objects::unmoveable::game_map.dart::GameMap" o-- "dart::ui::Image"
+"zspace::objects::unmoveable::game_map.dart::GameMap" o-- "dart::ui::Rect"
+"zspace::objects::game_object.dart::GameObject" <|-- "zspace::objects::unmoveable::game_map.dart::GameMap"
+"zspace::objects::solid_object.dart::SolidObject" <|-- "zspace::objects::unmoveable::game_map.dart::GameMap"
+
+abstract class "zspace::objects::unmoveable::meteor.dart::Meteor" {
+  +List<Vector2>? hitBox
+  -double _speed
+  -double _damage
+  -double _explosionRadius
+  +double speed
+  +double damage
+  +double explosionRadius
+}
+
+"zspace::objects::game_object.dart::GameObject" <|-- "zspace::objects::unmoveable::meteor.dart::Meteor"
+
+abstract class "zspace::objects::unmoveable::station.dart::Station" {
+  +List<Vector2>? hitBox
+  -double _damage
+  -double _shield
+  +dynamic getDamage()
+  +dynamic getShield()
+  +dynamic setDamage()
+  +dynamic setShield()
+}
+
+"zspace::objects::game_object.dart::GameObject" <|-- "zspace::objects::unmoveable::station.dart::Station"
+
+class "zspace::presentation::screens::episodes::episodes_page.dart::EpisodesPage" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "zspace::presentation::screens::episodes::episodes_page.dart::EpisodesPage"
+
+class "zspace::presentation::screens::episodes::episodes_viewmodel.dart::EpisodesViewModel" {
+  +List<EpisodeModel> episodes
+  +dynamic init()
+  +dynamic routeToLevelInformationPage()
+  +dynamic showError()
+}
+
+"stacked::src::state_management::base_view_models.dart::BaseViewModel" <|-- "zspace::presentation::screens::episodes::episodes_viewmodel.dart::EpisodesViewModel"
+
+class "zspace::presentation::screens::episodes::widgets::episode_planet.dart::StagePlanet" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "zspace::presentation::screens::episodes::widgets::episode_planet.dart::StagePlanet"
+
+class "zspace::presentation::screens::game::game_page.dart::GamePage" {
+  +GameViewModel viewModel
+  +void onTapDown()
+  +void onTapUp()
+  +void onDragEnd()
+  +void onDragCancel()
+  +dynamic stopJoystick()
+  +Future<void> onLoad()
+}
+
+"zspace::presentation::screens::game::game_page.dart::GamePage" o-- "zspace::presentation::screens::game::game_viewmodel.dart::GameViewModel"
+"flame::src::game::flame_game.dart::FlameGame" <|-- "zspace::presentation::screens::game::game_page.dart::GamePage"
+"flame::src::game::mixins::has_draggables.dart::HasDraggables" <|-- "zspace::presentation::screens::game::game_page.dart::GamePage"
+"flame::src::game::mixins::has_tappables.dart::HasTappables" <|-- "zspace::presentation::screens::game::game_page.dart::GamePage"
+"flame::src::collisions::has_collision_detection.dart::HasCollisionDetection" <|-- "zspace::presentation::screens::game::game_page.dart::GamePage"
+
+class "zspace::presentation::screens::game::game_viewmodel.dart::GameViewModel" {
+  +GamePage game
+  +UserShip player
+  +JoystickComponent joystick
+  +Paint knobPaint
+  +Paint backgroundPaint
+  +Future<void> prepareGame()
+}
+
+"zspace::presentation::screens::game::game_viewmodel.dart::GameViewModel" o-- "zspace::presentation::screens::game::game_page.dart::GamePage"
+"zspace::presentation::screens::game::game_viewmodel.dart::GameViewModel" o-- "zspace::objects::moveable::ships::user_ship.dart::UserShip"
+"zspace::presentation::screens::game::game_viewmodel.dart::GameViewModel" o-- "flame::src::components::input::joystick_component.dart::JoystickComponent"
+"zspace::presentation::screens::game::game_viewmodel.dart::GameViewModel" o-- "dart::ui::Paint"
+"stacked::src::state_management::base_view_models.dart::BaseViewModel" <|-- "zspace::presentation::screens::game::game_viewmodel.dart::GameViewModel"
+
+class "zspace::presentation::screens::game::services::game_service.dart::GameServiceImpl" {
+  +SpawnService spawnService
+  +List<CreatureType> getCreatures()
+  +LevelModel getLevel()
+  +void goToLevel()
+  +void goToNextLevel()
+  +void goToPreviousLevel()
+  +void setCreatures()
+  +void setLevel()
+}
+
+"zspace::presentation::screens::game::services::game_service.dart::GameServiceImpl" o-- "zspace::presentation::screens::game::services::ispawn_service.dart::SpawnService"
+"zspace::presentation::screens::game::services::igame_service.dart::GameService" <|-- "zspace::presentation::screens::game::services::game_service.dart::GameServiceImpl"
+
+abstract class "zspace::presentation::screens::game::services::igame_service.dart::GameService" {
+  +void setLevel()
+  +LevelModel getLevel()
+  +void setCreatures()
+  +List<CreatureType> getCreatures()
+  +void goToNextLevel()
+  +void goToPreviousLevel()
+  +void goToLevel()
+}
+
+abstract class "zspace::presentation::screens::game::services::ispawn_service.dart::SpawnService" {
+  +void spawnCreatures()
+}
+
+class "zspace::presentation::screens::game::services::spawn_service.dart::SpawnServiceImpl" {
+  +void spawnCreatures()
+}
+
+"zspace::presentation::screens::game::services::ispawn_service.dart::SpawnService" <|-- "zspace::presentation::screens::game::services::spawn_service.dart::SpawnServiceImpl"
+
+class "zspace::presentation::screens::inventory::inventory_page.dart::InventoryPage" {
+  +State<InventoryPage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "zspace::presentation::screens::inventory::inventory_page.dart::InventoryPage"
+
+class "zspace::presentation::screens::inventory::inventory_page.dart::_InventoryPageState" {
+  +List<SlideItem> inventoryItems
+  +List<SlideItem> tempList
+  +ValueNotifier<int?> selectingIndex
+  +int? selectedIndex
+  -ScrollController _scrollController
+  +void initState()
+  +Widget build()
+  +Widget buildGreyBox()
+  +Widget buildShipInventory()
+  +Widget buildPlayerInventory()
+  +Widget draggableItemBox()
+  +Widget wrapWithDragTargetBoxBuilder()
+  +Widget buildDraggedNewItemBox()
+}
+
+"zspace::presentation::screens::inventory::inventory_page.dart::_InventoryPageState" o-- "flutter::src::foundation::change_notifier.dart::ValueNotifier<int>"
+"zspace::presentation::screens::inventory::inventory_page.dart::_InventoryPageState" o-- "flutter::src::widgets::scroll_controller.dart::ScrollController"
+"flutter::src::widgets::framework.dart::State" <|-- "zspace::presentation::screens::inventory::inventory_page.dart::_InventoryPageState"
+
+class "zspace::presentation::screens::inventory::inventory_page.dart::SlideItem" {
+  +Color color
+  +String text
+  +int index
+  +bool isDragging
+  +InventoryItem? inventoryItem
+}
+
+"zspace::presentation::screens::inventory::inventory_page.dart::SlideItem" o-- "dart::ui::Color"
+"zspace::presentation::screens::inventory::inventory_page.dart::SlideItem" o-- "zspace::domain::entities::inventory_item.dart::InventoryItem"
+
+class "zspace::presentation::screens::item_detail::item_detail_page.dart::ItemDetailPage" {
+  +Widget build()
+  +Widget buildBuyButton()
+  +Widget animationForPurchased()
+  +Widget animationForFail()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "zspace::presentation::screens::item_detail::item_detail_page.dart::ItemDetailPage"
+
+class "zspace::presentation::screens::item_detail::item_detail_viewmodel.dart::ItemDetailViewModel" {
+  +dynamic buyItem()
+  +dynamic sellItem()
+}
+
+"stacked::src::state_management::base_view_models.dart::BaseViewModel" <|-- "zspace::presentation::screens::item_detail::item_detail_viewmodel.dart::ItemDetailViewModel"
+
+class "zspace::presentation::screens::levels::levels_page.dart::LevelsPage" {
+  +Widget build()
+  +Widget buildLevels()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "zspace::presentation::screens::levels::levels_page.dart::LevelsPage"
+
+class "zspace::presentation::screens::levels::levels_viewmodel.dart::LevelsViewModel" {
+  +dynamic routeToLevelInformationPage()
+  +dynamic showError()
+}
+
+"stacked::src::state_management::base_view_models.dart::BaseViewModel" <|-- "zspace::presentation::screens::levels::levels_viewmodel.dart::LevelsViewModel"
+
+class "zspace::presentation::screens::level_information::level_information_page.dart::LevelInformationPage" {
+  +LevelModel level
+  +Widget build()
+}
+
+"zspace::presentation::screens::level_information::level_information_page.dart::LevelInformationPage" o-- "zspace::data::models::level_model.dart::LevelModel"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "zspace::presentation::screens::level_information::level_information_page.dart::LevelInformationPage"
+
+class "zspace::presentation::screens::level_information::level_information_viewmodel.dart::LevelInformationViewModel" {
+  +dynamic routeToGame()
+  +void init()
+}
+
+"zspace::core::base::base_viewmodel.dart::BaseViewModel" <|-- "zspace::presentation::screens::level_information::level_information_viewmodel.dart::LevelInformationViewModel"
+
+class "zspace::presentation::screens::main_menu::main_menu_page.dart::MainMenuPage" {
+  +State<MainMenuPage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "zspace::presentation::screens::main_menu::main_menu_page.dart::MainMenuPage"
+
+class "zspace::presentation::screens::main_menu::main_menu_page.dart::_MainMenuPageState" {
+  +void didChangeDependencies()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "zspace::presentation::screens::main_menu::main_menu_page.dart::_MainMenuPageState"
+
+class "zspace::presentation::screens::main_menu::main_menu_viewmodel.dart::MainMenuViewModel" {
+  +ValueNotifier<double> startSigma
+  +void init()
+  +dynamic routeToEpisodesPage()
+  +dynamic routeToSettingsPage()
+  +dynamic routeToMarketPage()
+  +dynamic routeToInventoryPage()
+}
+
+"zspace::presentation::screens::main_menu::main_menu_viewmodel.dart::MainMenuViewModel" o-- "flutter::src::foundation::change_notifier.dart::ValueNotifier<double>"
+"stacked::src::state_management::base_view_models.dart::BaseViewModel" <|-- "zspace::presentation::screens::main_menu::main_menu_viewmodel.dart::MainMenuViewModel"
+
+class "zspace::presentation::screens::market::market_page.dart::MarketPage" {
+  +State<MarketPage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "zspace::presentation::screens::market::market_page.dart::MarketPage"
+
+class "zspace::presentation::screens::market::market_page.dart::_MarketPageState" {
+  +bool wantKeepAlive
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "zspace::presentation::screens::market::market_page.dart::_MarketPageState"
+"flutter::src::widgets::automatic_keep_alive.dart::AutomaticKeepAliveClientMixin" <|-- "zspace::presentation::screens::market::market_page.dart::_MarketPageState"
+
+class "zspace::presentation::screens::market::market_page.dart::PersistentHeader" {
+  +Widget widget
+  +double maxExtent
+  +double minExtent
+  +Widget build()
+  +bool shouldRebuild()
+}
+
+"zspace::presentation::screens::market::market_page.dart::PersistentHeader" o-- "flutter::src::widgets::framework.dart::Widget"
+"flutter::src::widgets::sliver_persistent_header.dart::SliverPersistentHeaderDelegate" <|-- "zspace::presentation::screens::market::market_page.dart::PersistentHeader"
+
+class "zspace::presentation::screens::market::market_viewmodel.dart::MarketViewModel" {
+  +String category
+  +List<MarketItemModel> marketItems
+  +bool isInited
+  +bool isLoading
+  +MarketCategory selectedCategory
+  +MarketDirection selectedDirection
+  +bool selectedExpire
+  +Future<void> init()
+  +Future<void> changeCategory()
+  +Future<void> changeDirection()
+  +Future<void> onShowExpiredChanged()
+  +Future<dynamic> getWinItems()
+  +dynamic routeToItemDetailPage()
+}
+
+"zspace::presentation::screens::market::market_viewmodel.dart::MarketViewModel" o-- "zspace::data::enums::win_point_category.dart::MarketCategory"
+"zspace::presentation::screens::market::market_viewmodel.dart::MarketViewModel" o-- "zspace::data::enums::win_point_category.dart::MarketDirection"
+"stacked::src::state_management::base_view_models.dart::BaseViewModel" <|-- "zspace::presentation::screens::market::market_viewmodel.dart::MarketViewModel"
+
+class "zspace::presentation::screens::market::widgets::market_category_list.dart::MarketCategoryList" {
+  +dynamic Function(MarketCategory) onCategorySelected
+  +dynamic Function(MarketDirection) onDirectionSelected
+  +MarketCategory selectedCategory
+  +MarketDirection selectedDirection
+  +bool selectedExpire
+  +dynamic Function(bool) onShowExpiredChanged
+  +Widget build()
+}
+
+"zspace::presentation::screens::market::widgets::market_category_list.dart::MarketCategoryList" o-- "null::dynamic Function(MarketCategory)"
+"zspace::presentation::screens::market::widgets::market_category_list.dart::MarketCategoryList" o-- "null::dynamic Function(MarketDirection)"
+"zspace::presentation::screens::market::widgets::market_category_list.dart::MarketCategoryList" o-- "zspace::data::enums::win_point_category.dart::MarketCategory"
+"zspace::presentation::screens::market::widgets::market_category_list.dart::MarketCategoryList" o-- "zspace::data::enums::win_point_category.dart::MarketDirection"
+"zspace::presentation::screens::market::widgets::market_category_list.dart::MarketCategoryList" o-- "null::dynamic Function(bool)"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "zspace::presentation::screens::market::widgets::market_category_list.dart::MarketCategoryList"
+
+class "zspace::presentation::screens::market::widgets::market_items_list.dart::MarketItemsList" {
+  +List<MarketItemModel> marketItems
+  +Widget build()
+  +Widget buildItem()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "zspace::presentation::screens::market::widgets::market_items_list.dart::MarketItemsList"
+
+class "zspace::presentation::screens::market::widgets::top_bar.dart::TopBar" {
+  +State<TopBar> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "zspace::presentation::screens::market::widgets::top_bar.dart::TopBar"
+
+class "zspace::presentation::screens::market::widgets::top_bar.dart::_TopBarState" {
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "zspace::presentation::screens::market::widgets::top_bar.dart::_TopBarState"
+
+class "zspace::presentation::screens::settings::settings_page.dart::SettingsPage" {
+  +Widget build()
+  +Widget settingButton()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "zspace::presentation::screens::settings::settings_page.dart::SettingsPage"
+
+class "zspace::presentation::screens::settings::settings_viewmodel.dart::SettingsViewModel" {
+  +dynamic changeLanguage()
+  +dynamic changeSound()
+}
+
+"stacked::src::state_management::base_view_models.dart::BaseViewModel" <|-- "zspace::presentation::screens::settings::settings_viewmodel.dart::SettingsViewModel"
+
+class "zspace::presentation::screens::splash::splash_page.dart::SplashPage" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "zspace::presentation::screens::splash::splash_page.dart::SplashPage"
+
+class "zspace::presentation::screens::splash::splash_viewmodel.dart::SplashViewModel" {
+  +Future<void> init()
+}
+
+"stacked::src::state_management::base_view_models.dart::BaseViewModel" <|-- "zspace::presentation::screens::splash::splash_viewmodel.dart::SplashViewModel"
+
+class "zspace::presentation::widgets::classic_text.dart::ClassicText" {
+  +String text
+  +TextStyle style
+  +TextAlign textAlign
+  +Widget build()
+}
+
+"zspace::presentation::widgets::classic_text.dart::ClassicText" o-- "flutter::src::painting::text_style.dart::TextStyle"
+"zspace::presentation::widgets::classic_text.dart::ClassicText" o-- "dart::ui::TextAlign"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "zspace::presentation::widgets::classic_text.dart::ClassicText"
+
+class "zspace::presentation::widgets::curved_container.dart::CurvedContainer" {
+  +Widget child
+  +double radius
+  +Widget build()
+}
+
+"zspace::presentation::widgets::curved_container.dart::CurvedContainer" o-- "flutter::src::widgets::framework.dart::Widget"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "zspace::presentation::widgets::curved_container.dart::CurvedContainer"
+
+class "zspace::presentation::widgets::custom_button.dart::CustomButtonOptions" {
+  +TextStyle? textStyle
+  +double? elevation
+  +double? height
+  +double? width
+  +EdgeInsetsGeometry? padding
+  +Color? color
+  +Color? disabledColor
+  +Color? disabledTextColor
+  +Color? splashColor
+  +Color? highlightColor
+  +double? iconSize
+  +Color? iconColor
+  +EdgeInsetsGeometry? iconPadding
+  +double? borderRadius
+  +BorderSide? borderSide
+  +BorderRadius? borderRadiusCustom
+}
+
+"zspace::presentation::widgets::custom_button.dart::CustomButtonOptions" o-- "flutter::src::painting::text_style.dart::TextStyle"
+"zspace::presentation::widgets::custom_button.dart::CustomButtonOptions" o-- "flutter::src::painting::edge_insets.dart::EdgeInsetsGeometry"
+"zspace::presentation::widgets::custom_button.dart::CustomButtonOptions" o-- "dart::ui::Color"
+"zspace::presentation::widgets::custom_button.dart::CustomButtonOptions" o-- "flutter::src::painting::borders.dart::BorderSide"
+"zspace::presentation::widgets::custom_button.dart::CustomButtonOptions" o-- "flutter::src::painting::border_radius.dart::BorderRadius"
+
+class "zspace::presentation::widgets::custom_button.dart::CustomButton" {
+  +String? text
+  +Widget? child
+  +Widget? icon
+  +IconData? iconData
+  +void Function() onPressed
+  +CustomButtonOptions options
+  +Widget build()
+}
+
+"zspace::presentation::widgets::custom_button.dart::CustomButton" o-- "flutter::src::widgets::framework.dart::Widget"
+"zspace::presentation::widgets::custom_button.dart::CustomButton" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"zspace::presentation::widgets::custom_button.dart::CustomButton" o-- "dart::ui::void Function()"
+"zspace::presentation::widgets::custom_button.dart::CustomButton" o-- "zspace::presentation::widgets::custom_button.dart::CustomButtonOptions"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "zspace::presentation::widgets::custom_button.dart::CustomButton"
+
+class "zspace::presentation::widgets::field_builder.dart::FieldBuilder" {
+  +TextEditingController controller
+  +String text
+  +String hint
+  +ValueNotifier<String?> notifier
+  +dynamic Function() validator
+  +TextInputType keyboardType
+  +EdgeInsets margin
+  +EdgeInsets fieldPadding
+  +Widget? rightWidget
+  +Widget? leftWidget
+  +Widget? suffixIcon
+  +TextStyle? titleStyle
+  +TextStyle? style
+  +EdgeInsets textPadding
+  +dynamic Function(String?)? onChanged
+  +bool isEnabled
+  +Color? textColor
+  +Color? disabledTextColor
+  +bool showErrorOnlyIfTrue
+  +bool disableValidator
+  +bool disableDecoration
+  +Radius? borderRadiusTopLeft
+  +Radius? borderRadiusBottomLeft
+  +Widget build()
+}
+
+"zspace::presentation::widgets::field_builder.dart::FieldBuilder" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"zspace::presentation::widgets::field_builder.dart::FieldBuilder" o-- "flutter::src::foundation::change_notifier.dart::ValueNotifier<String>"
+"zspace::presentation::widgets::field_builder.dart::FieldBuilder" o-- "null::dynamic Function()"
+"zspace::presentation::widgets::field_builder.dart::FieldBuilder" o-- "flutter::src::services::text_input.dart::TextInputType"
+"zspace::presentation::widgets::field_builder.dart::FieldBuilder" o-- "flutter::src::painting::edge_insets.dart::EdgeInsets"
+"zspace::presentation::widgets::field_builder.dart::FieldBuilder" o-- "flutter::src::widgets::framework.dart::Widget"
+"zspace::presentation::widgets::field_builder.dart::FieldBuilder" o-- "flutter::src::painting::text_style.dart::TextStyle"
+"zspace::presentation::widgets::field_builder.dart::FieldBuilder" o-- "null::dynamic Function(String)"
+"zspace::presentation::widgets::field_builder.dart::FieldBuilder" o-- "dart::ui::Color"
+"zspace::presentation::widgets::field_builder.dart::FieldBuilder" o-- "dart::ui::Radius"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "zspace::presentation::widgets::field_builder.dart::FieldBuilder"
+
+class "zspace::presentation::widgets::field_builder_auto.dart::FieldBuilderAuto" {
+  +TextEditingController controller
+  +String text
+  +String hint
+  +String? Function(String?)? validator
+  +TextInputType keyboardType
+  +EdgeInsets margin
+  +Widget? suffixIcon
+  +Widget? rightWidget
+  +bool isEnabled
+  +Color? textColor
+  +Color? disabledTextColor
+  +TextStyle? titleStyle
+  +TextStyle? style
+  +EdgeInsets textPadding
+  +dynamic Function(String?)? onChanged
+  +String? helperText
+  +bool autovalidateMode
+  +Widget build()
+}
+
+"zspace::presentation::widgets::field_builder_auto.dart::FieldBuilderAuto" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"zspace::presentation::widgets::field_builder_auto.dart::FieldBuilderAuto" o-- "null::String Function(String)"
+"zspace::presentation::widgets::field_builder_auto.dart::FieldBuilderAuto" o-- "flutter::src::services::text_input.dart::TextInputType"
+"zspace::presentation::widgets::field_builder_auto.dart::FieldBuilderAuto" o-- "flutter::src::painting::edge_insets.dart::EdgeInsets"
+"zspace::presentation::widgets::field_builder_auto.dart::FieldBuilderAuto" o-- "flutter::src::widgets::framework.dart::Widget"
+"zspace::presentation::widgets::field_builder_auto.dart::FieldBuilderAuto" o-- "dart::ui::Color"
+"zspace::presentation::widgets::field_builder_auto.dart::FieldBuilderAuto" o-- "flutter::src::painting::text_style.dart::TextStyle"
+"zspace::presentation::widgets::field_builder_auto.dart::FieldBuilderAuto" o-- "null::dynamic Function(String)"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "zspace::presentation::widgets::field_builder_auto.dart::FieldBuilderAuto"
+
+class "zspace::presentation::widgets::local_image_box.dart::LocalImageBox" {
+  +double width
+  +double height
+  +EdgeInsets margin
+  +String imgUrl
+  +BoxFit fit
+  +Widget build()
+}
+
+"zspace::presentation::widgets::local_image_box.dart::LocalImageBox" o-- "flutter::src::painting::edge_insets.dart::EdgeInsets"
+"zspace::presentation::widgets::local_image_box.dart::LocalImageBox" o-- "flutter::src::painting::box_fit.dart::BoxFit"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "zspace::presentation::widgets::local_image_box.dart::LocalImageBox"
+
+class "zspace::presentation::widgets::overlay::classic_loading_overlay.dart::ClassicLoadingOverlay" {
+  +ValueNotifier<OverlayEntry?> overlayEntry
+  +Widget build()
+  +Widget buildImage()
+}
+
+"zspace::presentation::widgets::overlay::classic_loading_overlay.dart::ClassicLoadingOverlay" o-- "flutter::src::foundation::change_notifier.dart::ValueNotifier<OverlayEntry>"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "zspace::presentation::widgets::overlay::classic_loading_overlay.dart::ClassicLoadingOverlay"
+
+class "zspace::presentation::widgets::overlay::lock_overlay.dart::LockOverlay" {
+  {static} -LockOverlay? _instance
+  -ValueNotifier<OverlayEntry?> _overlayEntry
+  +void showClassicLoadingOverlay()
+  +dynamic closeOverlay()
+}
+
+"zspace::presentation::widgets::overlay::lock_overlay.dart::LockOverlay" o-- "zspace::presentation::widgets::overlay::lock_overlay.dart::LockOverlay"
+"zspace::presentation::widgets::overlay::lock_overlay.dart::LockOverlay" o-- "flutter::src::foundation::change_notifier.dart::ValueNotifier<OverlayEntry>"
+
+class "zspace::presentation::widgets::overlay::lock_overlay_dialog.dart::LockOverlayDialog" {
+  {static} -LockOverlayDialog? _instance
+  -ValueNotifier<OverlayEntry?> _overlayEntry
+  +void showCustomOverlay()
+  +dynamic closeOverlay()
+}
+
+"zspace::presentation::widgets::overlay::lock_overlay_dialog.dart::LockOverlayDialog" o-- "zspace::presentation::widgets::overlay::lock_overlay_dialog.dart::LockOverlayDialog"
+"zspace::presentation::widgets::overlay::lock_overlay_dialog.dart::LockOverlayDialog" o-- "flutter::src::foundation::change_notifier.dart::ValueNotifier<OverlayEntry>"
+
+class "zspace::presentation::widgets::overlay::overlay_error_dialog.dart::OverlayErrorDialog" {
+  +String error
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "zspace::presentation::widgets::overlay::overlay_error_dialog.dart::OverlayErrorDialog"
+
+class "zspace::presentation::widgets::sign_text_form_field.dart::SignTextFormField" {
+  +TextEditingController textController
+  +String labelText
+  +String hintText
+  +bool obscureVisibility
+  +Widget? prefixIcon
+  +Widget? suffixIcon
+  +Color obscureIconColor
+  +double obscureIconSize
+  +String validatorEmptyMessage
+  +String? Function(String?)? validator
+  +dynamic Function(String?)? onChanged
+  +Color borderColor
+  +Color fillColor
+  +TextInputType keyboardType
+  +bool disableValidator
+  +Color hintColor
+  +double borderRadius
+  +bool isEnabled
+  +Color? textColor
+  +Color? disabledTextColor
+  +TextStyle? style
+  +String? helperText
+  +bool autovalidateMode
+  +Radius? borderRadiusTopLeft
+  +Radius? borderRadiusBottomLeft
+  +_SignTextFormFieldState createState()
+}
+
+"zspace::presentation::widgets::sign_text_form_field.dart::SignTextFormField" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"zspace::presentation::widgets::sign_text_form_field.dart::SignTextFormField" o-- "flutter::src::widgets::framework.dart::Widget"
+"zspace::presentation::widgets::sign_text_form_field.dart::SignTextFormField" o-- "dart::ui::Color"
+"zspace::presentation::widgets::sign_text_form_field.dart::SignTextFormField" o-- "null::String Function(String)"
+"zspace::presentation::widgets::sign_text_form_field.dart::SignTextFormField" o-- "null::dynamic Function(String)"
+"zspace::presentation::widgets::sign_text_form_field.dart::SignTextFormField" o-- "flutter::src::services::text_input.dart::TextInputType"
+"zspace::presentation::widgets::sign_text_form_field.dart::SignTextFormField" o-- "flutter::src::painting::text_style.dart::TextStyle"
+"zspace::presentation::widgets::sign_text_form_field.dart::SignTextFormField" o-- "dart::ui::Radius"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "zspace::presentation::widgets::sign_text_form_field.dart::SignTextFormField"
+
+class "zspace::presentation::widgets::sign_text_form_field.dart::_SignTextFormFieldState" {
+  +bool obscureVisible
+  +bool hasFocus
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "zspace::presentation::widgets::sign_text_form_field.dart::_SignTextFormFieldState"
+
+class "zspace::presentation::widgets::square_checkbox.dart::SquareCheckbox" {
+  +double? width
+  +double? height
+  +bool enable
+  +bool value
+  +dynamic Function(bool)? onChange
+  +EdgeInsetsGeometry? padding
+  +EdgeInsetsGeometry? margin
+  +BoxBorder? border
+  +Color? color
+  +Color? checkColor
+  +Color? disableColor
+  +IconData? checkIcon
+  +Duration? duration
+  +Curve? curve
+  +Color? glowColor
+  +Offset? offset
+  +double? spreadRadius
+  +double? blurRadius
+  +Widget build()
+  +Color buildGlowColor()
+  -Color _buildCheckboxColor()
+}
+
+"zspace::presentation::widgets::square_checkbox.dart::SquareCheckbox" o-- "null::dynamic Function(bool)"
+"zspace::presentation::widgets::square_checkbox.dart::SquareCheckbox" o-- "flutter::src::painting::edge_insets.dart::EdgeInsetsGeometry"
+"zspace::presentation::widgets::square_checkbox.dart::SquareCheckbox" o-- "flutter::src::painting::box_border.dart::BoxBorder"
+"zspace::presentation::widgets::square_checkbox.dart::SquareCheckbox" o-- "dart::ui::Color"
+"zspace::presentation::widgets::square_checkbox.dart::SquareCheckbox" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"zspace::presentation::widgets::square_checkbox.dart::SquareCheckbox" o-- "flutter::src::animation::curves.dart::Curve"
+"zspace::presentation::widgets::square_checkbox.dart::SquareCheckbox" o-- "dart::ui::Offset"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "zspace::presentation::widgets::square_checkbox.dart::SquareCheckbox"
+
+class "zspace::presentation::widgets::tab_bar::tab_bar_view_without_animation.dart::TabBarViewWithoutAnimation" {
+  +TabController? controller
+  +List<Widget> children
+  +ScrollPhysics? physics
+  +DragStartBehavior dragStartBehavior
+  +_TabBarViewWithoutAnimationState createState()
+}
+
+"zspace::presentation::widgets::tab_bar::tab_bar_view_without_animation.dart::TabBarViewWithoutAnimation" o-- "flutter::src::material::tab_controller.dart::TabController"
+"zspace::presentation::widgets::tab_bar::tab_bar_view_without_animation.dart::TabBarViewWithoutAnimation" o-- "flutter::src::widgets::scroll_physics.dart::ScrollPhysics"
+"zspace::presentation::widgets::tab_bar::tab_bar_view_without_animation.dart::TabBarViewWithoutAnimation" o-- "flutter::src::gestures::recognizer.dart::DragStartBehavior"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "zspace::presentation::widgets::tab_bar::tab_bar_view_without_animation.dart::TabBarViewWithoutAnimation"
+
+class "zspace::presentation::widgets::tab_bar::tab_bar_view_without_animation.dart::_TabBarViewWithoutAnimationState" {
+  -TabController? _controller
+  -PageController _pageController
+  -List<Widget> _children
+  -List<Widget> _childrenWithKey
+  -int? _currentIndex
+  -int _warpUnderwayCount
+  -bool _controllerIsValid
+  -void _updateTabController()
+  +void initState()
+  +void didChangeDependencies()
+  +void didUpdateWidget()
+  +void dispose()
+  -void _updateChildren()
+  -void _handleTabControllerAnimationTick()
+  -Future<void> _warpToCurrentIndex()
+  -bool _handleScrollNotification()
+  +Widget build()
+}
+
+"zspace::presentation::widgets::tab_bar::tab_bar_view_without_animation.dart::_TabBarViewWithoutAnimationState" o-- "flutter::src::material::tab_controller.dart::TabController"
+"zspace::presentation::widgets::tab_bar::tab_bar_view_without_animation.dart::_TabBarViewWithoutAnimationState" o-- "flutter::src::widgets::page_view.dart::PageController"
+"flutter::src::widgets::framework.dart::State" <|-- "zspace::presentation::widgets::tab_bar::tab_bar_view_without_animation.dart::_TabBarViewWithoutAnimationState"
+
+class "zspace::presentation::widgets::theme_button.dart::ThemeButton" {
+  +String? text
+  +dynamic Function() onTap
+  +BorderRadius? borderRadius
+  +Color? color
+  +double? elevation
+  +EdgeInsets margin
+  +Widget? child
+  +bool isEnabled
+  +double width
+  +double height
+  +Color? textColor
+  +TextStyle? textStyle
+  +Widget build()
+}
+
+"zspace::presentation::widgets::theme_button.dart::ThemeButton" o-- "null::dynamic Function()"
+"zspace::presentation::widgets::theme_button.dart::ThemeButton" o-- "flutter::src::painting::border_radius.dart::BorderRadius"
+"zspace::presentation::widgets::theme_button.dart::ThemeButton" o-- "dart::ui::Color"
+"zspace::presentation::widgets::theme_button.dart::ThemeButton" o-- "flutter::src::painting::edge_insets.dart::EdgeInsets"
+"zspace::presentation::widgets::theme_button.dart::ThemeButton" o-- "flutter::src::widgets::framework.dart::Widget"
+"zspace::presentation::widgets::theme_button.dart::ThemeButton" o-- "flutter::src::painting::text_style.dart::TextStyle"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "zspace::presentation::widgets::theme_button.dart::ThemeButton"
+
+class "zspace::presentation::widgets::theme_button_icon.dart::ThemeButtonIcon" {
+  +double width
+  +double height
+  +double radius
+  +double iconSize
+  +double textSize
+  +double opacity
+  +String buttonText
+  +IconData buttonIcon
+  +dynamic Function() onTap
+  +Color? iconColor
+  +Color? textColor
+  +Widget build()
+}
+
+"zspace::presentation::widgets::theme_button_icon.dart::ThemeButtonIcon" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"zspace::presentation::widgets::theme_button_icon.dart::ThemeButtonIcon" o-- "null::dynamic Function()"
+"zspace::presentation::widgets::theme_button_icon.dart::ThemeButtonIcon" o-- "dart::ui::Color"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "zspace::presentation::widgets::theme_button_icon.dart::ThemeButtonIcon"
+
+class "zspace::shared::app_images.dart::AppImages" {
+  {static} +String loading
+  {static} +String logo
+  {static} +String spaceBackground
+  {static} +String saturn
+  {static} +String starShip
+  {static} +String vengeanceShip
+  {static} +String mapEpisode1Level1
+}
+
+class "zspace::shared::app_paths.dart::AppPaths" {
+  {static} +String robloxImg
+}
+
+class "zspace::shared::app_theme.dart::AppTheme" {
+  {static} -AppTheme? _instance
+  +Color primaryBlueColor
+  +Color primaryDarkBlueColor
+  +Color primaryColor
+  +Color darkPrimaryColor
+  +Color secondaryColor
+  +Color accentFirstColor
+  +Color accentSecondColor
+  +Color blackColor
+  +Color greyScale0
+  +Color greyScale1
+  +Color greyScale2
+  +Color greyScale3
+  +Color greyScale4
+  +Color greyScale5
+  +Color greyScale6
+  +Color lightBlueColor
+  +Color whiteColor
+  +Color bgColor
+  +LinearGradient gradientPrimary
+  +TextStyle headingText
+  +TextStyle largeParagraphBoldText
+  +TextStyle paragraphBoldText
+  +TextStyle paragraphSemiBoldText
+  +TextStyle paragraphRegularText
+  +TextStyle buttonText
+  +TextStyle smallParagraphSemiBoldText
+  +TextStyle smallParagraphRegularText
+  +TextStyle smallParagraphMediumText
+  +TextStyle extraSmallParagraphSemiBoldText
+  +TextStyle extraSmallParagraphRegularText
+  +TextStyle extraSmallParagraphMediumText
+}
+
+"zspace::shared::app_theme.dart::AppTheme" o-- "zspace::shared::app_theme.dart::AppTheme"
+"zspace::shared::app_theme.dart::AppTheme" o-- "dart::ui::Color"
+"zspace::shared::app_theme.dart::AppTheme" o-- "flutter::src::painting::gradient.dart::LinearGradient"
+"zspace::shared::app_theme.dart::AppTheme" o-- "flutter::src::painting::text_style.dart::TextStyle"
+
+
+@enduml

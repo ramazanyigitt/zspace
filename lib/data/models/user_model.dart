@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:zspace/domain/entities/user.dart';
+import '../../domain/entities/user.dart';
 
 class UserModel extends User {
   UserModel({

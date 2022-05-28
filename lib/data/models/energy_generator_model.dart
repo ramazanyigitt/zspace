@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:zspace/domain/entities/energy_generator.dart';
+import '../../domain/entities/energy_generator.dart';
 
 class EnergyGeneratorModel extends EnergyGenerator {
   EnergyGeneratorModel({

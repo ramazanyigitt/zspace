@@ -6,19 +6,18 @@ import 'package:flame/extensions.dart';
 import '../../game_object.dart';
 
 abstract class Ship extends GameObject {
-  List<Vector2>? hitBox;
-  Ship(
-    ui.Image image, {
+  Ship({
+    ui.Image? image,
     SpriteAnimationData? animationData,
     Vector2? position,
-    required Vector2 size,
+    Vector2? size,
     double? angle,
     Anchor? anchor,
     int? priority,
-    this.hitBox,
+    List<Vector2>? hitBox,
     bool playing: false,
   }) : super(
-          image,
+          image: image,
           animationData: animationData,
           position: position,
           size: size,

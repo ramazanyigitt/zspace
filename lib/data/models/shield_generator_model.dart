@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:zspace/domain/entities/shield_generator.dart';
+import '../../domain/entities/shield_generator.dart';
 
 class ShieldGeneratorModel extends ShieldGenerator {
   ShieldGeneratorModel({

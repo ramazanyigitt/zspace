@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:zspace/domain/entities/level.dart';
+import 'level.dart';
 
 class Episode extends Equatable {
   final String? name;

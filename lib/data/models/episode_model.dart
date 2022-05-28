@@ -1,5 +1,5 @@
-import 'package:zspace/data/models/level_model.dart';
-import 'package:zspace/domain/entities/episode.dart';
+import 'level_model.dart';
+import '../../domain/entities/episode.dart';
 
 class EpisodeModel extends Episode {
   final String? name;

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-import 'package:zspace/data/models/market_item_model.dart';
+import '../../data/models/market_item_model.dart';
 
 class InventoryItem extends Equatable {
   InventoryItem({

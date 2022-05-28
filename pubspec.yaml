@@ -7,7 +7,7 @@ environment:
 dependencies:
     flutter:
         sdk: flutter
-    flame: ^1.0.0
+    flame: ^1.1.1
     cupertino_icons: ^1.0.2
     email_validator: ^2.0.1
     dartz: ^0.10.1
@@ -42,11 +42,15 @@ dev_dependencies:
     mockito: ^5.1.0
     build_runner: ^2.1.7
     hive_generator: ^1.1.0
+    dcdg: ^4.0.1
 flutter:
     uses-material-design: true
     assets:
         - assets/images/
         - assets/images/ships/
+        - assets/images/lasers/
+        - assets/images/rockets/
+        - assets/images/explosions/
         - assets/images/maps/
         - assets/lotties/
 

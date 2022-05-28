@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:zspace/data/models/market_item_model.dart';
-import 'package:zspace/data/models/user_model.dart';
-import 'package:zspace/domain/entities/user.dart';
-import 'package:zspace/domain/entities/market_item.dart';
-import 'package:zspace/domain/entities/inventory_item.dart';
+import '../models/market_item_model.dart';
+import '../models/user_model.dart';
+import '../../domain/entities/user.dart';
+import '../../domain/entities/market_item.dart';
+import '../../domain/entities/inventory_item.dart';
 
 import '../../../../core/platform/network_info.dart';
 import '../../core/errors/exception.dart';
