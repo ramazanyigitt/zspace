@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:zspace/objects/game_object.dart';
 import 'package:zspace/objects/moveable/lasers/laser.dart';
 import 'package:zspace/objects/moveable/ships/ship.dart';
+import 'package:zspace/objects/unmoveable/game_map.dart';
 import 'dart:ui' as ui;
 
 import '../../explodable_object.dart';
@@ -39,10 +40,10 @@ class RedLaser extends Laser with ExplodableObject implements GameObject {
         ) {
     anchor = Anchor.center;
     hitBox = [
-      Vector2(-1, -1),
-      Vector2(-1, 1),
-      Vector2(1, 1),
-      Vector2(1, -1),
+      Vector2(-0.5, -0.75),
+      Vector2(-0.5, 0.75),
+      Vector2(0.5, 0.75),
+      Vector2(0.5, -0.75),
     ];
   }
 
@@ -57,7 +58,15 @@ class RedLaser extends Laser with ExplodableObject implements GameObject {
   @override
   void update(double dt) {
     super.update(dt);
-    position.moveToTarget(target, getSpeed() * dt);
+    final ds = getSpeed() * dt;
+
+    final diff = target - position;
+    if (diff.length < ds) {
+      position.setFrom(target);
+    } else {
+      diff.scaleTo(ds);
+      position.setFrom(position + diff);
+    }
   }
 
   void rotateToEnemy() {
@@ -72,14 +81,16 @@ class RedLaser extends Laser with ExplodableObject implements GameObject {
 
     if (other is Ship) {
       if (other != shooter) {
-        other.getArmor();
-        other.getShield();
-        //  log('Ship armor: ${other.getArmor()} ship shield: ${other.getShield()}');
+        other.getDamageNormal(getDamage());
+        log('Armor: ${other.getArmor()} shield ${other.getShield()}');
         final diff = target - position;
         createSmallExplode(this.gameRef, diff);
         this.gameRef.remove(this);
         this.removeFromParent();
       }
+    } else if (other is GameMap) {
+      this.gameRef.remove(this);
+      this.removeFromParent();
     }
   }
 

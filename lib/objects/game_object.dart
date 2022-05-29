@@ -123,9 +123,10 @@ class GameObject extends SpriteAnimationComponent
       FlameGame game, GameObject target, GameObject shooter) async {
     if (T == RedLaser) {
       var creatureImage = await game.images.load(AppImages.lasers.redLaser);
+      final lastPosition = Vector2(target.position.x, target.position.y);
       return RedLaser(
         image: creatureImage,
-        target: target.position,
+        target: lastPosition,
         size: Vector2(64.0, 64.0),
         textureSize: Vector2(144.0, 251.0),
         position: shooter.center,

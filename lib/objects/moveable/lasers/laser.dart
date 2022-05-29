@@ -32,13 +32,13 @@ abstract class Laser extends GameObject {
   double _speed = 300;
   double _damage = 0;
 
-  getSpeed() => _speed;
-  getDamage() => _damage;
-  setSpeed(double speed) {
+  double getSpeed() => _speed;
+  double getDamage() => _damage;
+  void setSpeed(double speed) {
     _speed = speed;
   }
 
-  setDamage(double damage) {
+  void setDamage(double damage) {
     _damage = damage;
   }
 }

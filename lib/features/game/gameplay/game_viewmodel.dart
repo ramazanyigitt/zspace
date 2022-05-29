@@ -2,7 +2,9 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:stacked/stacked.dart';
+import 'package:zspace/features/_components/overlay/lock_overlay.dart';
 import 'package:zspace/features/game/_services/ispawn_service.dart';
 import 'package:zspace/injection_container.dart';
 
@@ -86,5 +88,14 @@ class GameViewModel extends BaseViewModel {
           game,
           locator<GameService>().getCreatures(level),
         );
+  }
+
+  gameOver() async {
+    game.pauseEngine();
+    game.removeAll(game.children);
+    LockOverlay().showClassicLoadingOverlay(buildAfterRebuild: true);
+    await Future.delayed(Duration(seconds: 2));
+    LockOverlay().closeOverlay();
+    //Get.back();
   }
 }

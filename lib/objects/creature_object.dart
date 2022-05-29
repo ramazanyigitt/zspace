@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
+import 'package:zspace/objects/moveable/lasers/red_laser.dart';
+import 'package:zspace/objects/moveable/ships/ship.dart';
 import 'game_object.dart';
 import 'moveable/ships/user_ship.dart';
 import 'unmoveable/game_map.dart';
@@ -43,5 +45,26 @@ mixin CreatureObject on GameObject {
     }
 
     rotateToObject(userShip);
+  }
+
+  void rotateToEnemy(GameObject enemy) {
+    final enemyPosition = enemy.position;
+    final myPosition = position;
+    final angle = (enemyPosition - myPosition).screenAngle();
+    this.angle = angle;
+  }
+
+  Future<void> shootLaser(GameObject enemy) async {
+    log('Enemy: $enemy this: $this');
+    final laser =
+        await GameObject.createLaser<RedLaser>(this.gameRef, enemy, this);
+    this.gameRef.add(laser);
+  }
+
+  Future<GameObject?> findTarget() async {
+    final component = gameRef.children.firstWhere((value) => value is UserShip);
+
+    final enemy = component as Ship;
+    return enemy;
   }
 }

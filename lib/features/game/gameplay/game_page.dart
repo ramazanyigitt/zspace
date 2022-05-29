@@ -64,27 +64,6 @@ class GamePage extends FlameGame
   Future<void> onLoad() async {
     super.onLoad();
     LockOverlay().showClassicLoadingOverlay(buildAfterRebuild: true);
-    await viewModel.prepareGame().whenComplete(() {
-      //LockOverlay().closeOverlay();
-    });
-    /*joystick = JoystickComponent(
-      knob: CircleComponent(
-        radius: 30,
-        paint: knobPaint,
-      ),
-      background: CircleComponent(radius: 100, paint: backgroundPaint),
-      position: Vector2(100, 100),
-      size: 15,
-    );
-
-    var spriteSheet = await images.load('ninja_boy_glide_ss.png');
-    var player = UserShip(
-      image: spriteSheet,
-      joystick: joystick,
-      textureSize: Vector2(150.0, 150.0),
-      spriteAmount: 10,
-    );
-
-    add(player);*/
+    await viewModel.prepareGame().whenComplete(() {});
   }
 }

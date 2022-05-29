@@ -2,8 +2,11 @@ import 'dart:developer';
 
 import 'package:flame/components.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:zspace/features/game/_services/igame_service.dart';
+import 'package:zspace/injection_container.dart';
 import 'package:zspace/objects/game_object.dart';
 import 'package:zspace/objects/moveable/lasers/red_laser.dart';
+import '../../../features/game/gameplay/game_page.dart';
 import 'ship.dart';
 import 'dart:ui' as ui;
 
@@ -63,6 +66,12 @@ class UserShip extends Ship {
     _targeting = false;
     moving = false;
     lastMoveKey = '';
+  }
+
+  @override
+  void onDie() {
+    super.onDie();
+    (gameRef as GamePage).viewModel.gameOver();
   }
 
   @override

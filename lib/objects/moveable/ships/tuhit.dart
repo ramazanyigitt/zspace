@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flame/palette.dart';
 import 'package:zspace/objects/creature_object.dart';
 import 'package:zspace/objects/game_object.dart';
+import 'package:zspace/objects/moveable/lasers/red_laser.dart';
 import 'ship.dart';
 import 'dart:ui' as ui;
 
@@ -47,19 +48,29 @@ class TuhitShip extends Ship with CreatureObject implements GameObject {
     log('tuhit onload!');
     super.onLoad();
     setSpeed(50);
+    _targeting = false;
   }
 
+  late bool _targeting;
   @override
   void update(double dt) {
     super.update(dt);
-    //approachToUser(dt, getSpeed());
-    /*if (!joystick.delta.isZero()) {
-      //log('Moving as ${joystick.relativeDelta * maxSpeed * dt}');
-      position.add(joystick.relativeDelta * maxSpeed * dt);
-      if (!isColliding) {
-        //angle = joystick.delta.screenAngle();
-      }
-    }*/
+    approachToUser(dt, getSpeed());
+    attackNearestTarget();
+  }
+
+  void attackNearestTarget() async {
+    if (_targeting) return null;
+    _targeting = true;
+    await Future.delayed(Duration(seconds: 1, milliseconds: 800));
+    final enemy = await findTarget();
+    if (enemy == null) {
+      _targeting = false;
+      return;
+    }
+    rotateToEnemy(enemy);
+    await shootLaser(enemy);
+    _targeting = false;
   }
 
   @override
