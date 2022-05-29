@@ -12,17 +12,17 @@ import '../../explodable_object.dart';
 class NormalExplosion extends Explosion
     with ExplodableObject
     implements GameObject {
-  List<Vector2>? hitBox;
-  GameObject shooter;
+  List<Vector2> hitBox;
+  GameObject explosionObject;
   NormalExplosion({
-    required this.shooter,
+    required this.explosionObject,
     ui.Image? image,
     Vector2? position,
     Vector2? size,
     double? angle,
     Anchor? anchor,
     int? priority,
-    this.hitBox,
+    required this.hitBox,
   }) : super(
           image: image,
           animationData: SpriteAnimationData.sequenced(

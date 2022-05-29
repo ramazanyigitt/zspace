@@ -4,7 +4,7 @@ import 'package:flame/components.dart';
 import '../../game_object.dart';
 
 abstract class Explosion extends GameObject {
-  List<Vector2>? hitBox;
+  List<Vector2> hitBox;
   Explosion({
     ui.Image? image,
     SpriteAnimationData? animationData,
@@ -13,7 +13,7 @@ abstract class Explosion extends GameObject {
     double? angle,
     Anchor? anchor,
     int? priority,
-    this.hitBox,
+    required this.hitBox,
   }) : super(
           image: image,
           animationData: animationData,

@@ -26,7 +26,7 @@ class UserShip extends Ship {
     required this.textureSize,
     this.spriteAmount: 1,
     this.stepTime: 0.1,
-    List<Vector2>? hitBox,
+    required List<Vector2> hitBox,
     this.loop: false,
     bool playing: false,
   }) : super(

@@ -33,7 +33,16 @@ class GameViewModel extends BaseViewModel {
     //Map
 
     var mapImage = await game.images.load(AppImages.mapEpisode1Level1.gameMap);
-    var map = GameMap(mapImage, size: Vector2(738, 1312));
+    var map = GameMap(
+      mapImage,
+      hitBox: [
+        Vector2(-1, -1),
+        Vector2(-1, 1),
+        Vector2(1, 1),
+        Vector2(1, -1),
+      ],
+      size: Vector2(738, 1312),
+    );
     game.add(map);
 
     //User
@@ -56,7 +65,12 @@ class GameViewModel extends BaseViewModel {
       textureSize: Vector2(550.0, 648.0),
       spriteAmount: 1,
       playing: true,
-
+      hitBox: [
+        Vector2(-1, -1),
+        Vector2(-1, 1),
+        Vector2(1, 1),
+        Vector2(1, -1),
+      ],
       //loop: true,
     );
 

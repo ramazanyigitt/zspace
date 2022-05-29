@@ -30,11 +30,12 @@ mixin CreatureObject on GameObject {
 
     var speed = maxSpeed * dt;
 
-    if (position != userShipPosition) {
-      final diff = userShipPosition - position;
-      final distance = diff.length;
+    final diff = userShipPosition - position;
+    if (position != userShipPosition &&
+        ((diff.x.abs()) > userShip.size.x * 2 ||
+            (diff.y.abs() > userShip.size.y * 2))) {
       if (diff.length < speed) {
-        //position.setFrom(userShipPosition);
+        position.setFrom(userShipPosition);
       } else {
         diff.scaleTo(speed);
         position.setFrom(this.position + diff);

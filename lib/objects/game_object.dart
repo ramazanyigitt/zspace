@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
+import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:zspace/data/enums/creature_types.dart';
 import 'package:zspace/objects/moveable/lasers/red_laser.dart';
@@ -18,6 +19,7 @@ import 'moveable/lasers/laser.dart';
 class GameObject extends SpriteAnimationComponent
     with CollisionCallbacks, HasGameRef {
   bool? keepAngle;
+  List<Vector2> hitBox;
   GameObject({
     ui.Image? image,
     SpriteAnimationData? animationData,
@@ -31,7 +33,7 @@ class GameObject extends SpriteAnimationComponent
     double? angle,
     Anchor? anchor,
     int? priority,
-    this.hitBox,
+    required this.hitBox,
   }) : super(
           animation: image == null
               ? null
@@ -58,20 +60,26 @@ class GameObject extends SpriteAnimationComponent
     if (paint != null) {
       this.paint = paint;
     }
-    if (hitBox == null)
+    /*if (hitBox == null)
       hitBox = [
         Vector2(-1, -1),
         Vector2(-1, 1),
         Vector2(1, 1),
         Vector2(1, -1),
-      ];
+      ];*/
   }
-  List<Vector2>? hitBox;
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    add(PolygonHitbox.relative(hitBox!, parentSize: size));
+    final hitboxPaint = BasicPalette.white.paint()
+      ..style = PaintingStyle.stroke;
+
+    add(
+      PolygonHitbox.relative(hitBox, parentSize: size)
+        ..paint = hitboxPaint
+        ..renderShape = true,
+    );
   }
 
   @override
@@ -96,7 +104,13 @@ class GameObject extends SpriteAnimationComponent
         textureSize: Vector2(280.0, 280.0),
         spriteAmount: 1,
         playing: false,
-        position: Vector2(400, 500),
+        position: Vector2(250, 250),
+        hitBox: [
+          Vector2(-0.25, -1),
+          Vector2(-1, 1),
+          Vector2(1, 1),
+          Vector2(0.25, -1),
+        ],
       );
     } else {
       log("Error in GameObject",
@@ -113,9 +127,16 @@ class GameObject extends SpriteAnimationComponent
         image: creatureImage,
         target: target.position,
         size: Vector2(64.0, 64.0),
-        textureSize: Vector2(251.0, 144.0),
-        position: shooter.position,
+        textureSize: Vector2(144.0, 251.0),
+        position: shooter.center,
         shooter: shooter,
+        angle: shooter.angle,
+        hitBox: [
+          Vector2(-1, -1),
+          Vector2(-1, 1),
+          Vector2(1, 1),
+          Vector2(1, -1),
+        ],
       ) as T;
     } else {
       log("Error in GameObject", error: '$T is not defined in GameObject');
@@ -124,15 +145,22 @@ class GameObject extends SpriteAnimationComponent
   }
 
   static Future<T> createExplosion<T extends Explosion>(
-      FlameGame game, GameObject shooter) async {
+      FlameGame game, GameObject explosionObject, Vector2 diff) async {
     if (T == NormalExplosion) {
       var creatureImage =
           await game.images.load(AppImages.explosions.normalExplosion);
       return NormalExplosion(
         image: creatureImage,
         size: Vector2(64.0, 64.0),
-        position: shooter.position,
-        shooter: shooter,
+        position: explosionObject.position + diff,
+        explosionObject: explosionObject,
+        angle: explosionObject.angle,
+        hitBox: [
+          Vector2(-1, -1),
+          Vector2(-1, 1),
+          Vector2(1, 1),
+          Vector2(1, -1),
+        ],
       ) as T;
     } else {
       log("Error in GameObject", error: '$T is not defined in GameObject');

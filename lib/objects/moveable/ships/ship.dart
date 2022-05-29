@@ -14,7 +14,7 @@ abstract class Ship extends GameObject {
     double? angle,
     Anchor? anchor,
     int? priority,
-    List<Vector2>? hitBox,
+    required List<Vector2> hitBox,
     bool playing: false,
   }) : super(
           image: image,

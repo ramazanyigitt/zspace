@@ -1,6 +1,8 @@
 import 'dart:developer';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/palette.dart';
 import 'package:zspace/objects/creature_object.dart';
 import 'package:zspace/objects/game_object.dart';
 import 'ship.dart';
@@ -13,7 +15,7 @@ class TuhitShip extends Ship with CreatureObject implements GameObject {
     Vector2? textureSize,
     int spriteAmount: 1,
     double stepTime: 0.1,
-    List<Vector2>? hitBox,
+    required List<Vector2> hitBox,
     bool loop: false,
     bool playing: false,
     Vector2? position,
@@ -31,10 +33,18 @@ class TuhitShip extends Ship with CreatureObject implements GameObject {
           position: position,
         ) {
     anchor = Anchor.center;
+    log('tuhit ?!');
+    hitBox = [
+      Vector2(-1, -1),
+      Vector2(-1, 1),
+      Vector2(1, 1),
+      Vector2(1, -1),
+    ];
   }
 
   @override
   Future<void> onLoad() async {
+    log('tuhit onload!');
     super.onLoad();
     setSpeed(50);
   }
@@ -42,7 +52,7 @@ class TuhitShip extends Ship with CreatureObject implements GameObject {
   @override
   void update(double dt) {
     super.update(dt);
-    approachToUser(dt, getSpeed());
+    //approachToUser(dt, getSpeed());
     /*if (!joystick.delta.isZero()) {
       //log('Moving as ${joystick.relativeDelta * maxSpeed * dt}');
       position.add(joystick.relativeDelta * maxSpeed * dt);
@@ -55,6 +65,6 @@ class TuhitShip extends Ship with CreatureObject implements GameObject {
   @override
   void render(ui.Canvas canvas) {
     super.render(canvas);
-    renderDebugMode(canvas);
+    //renderDebugMode(canvas);
   }
 }

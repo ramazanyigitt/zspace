@@ -13,7 +13,7 @@ abstract class Rocket extends GameObject {
     double? angle,
     Anchor? anchor,
     int? priority,
-    List<Vector2>? hitBox,
+    required List<Vector2> hitBox,
   }) : super(
           image: image,
           animationData: animationData,
