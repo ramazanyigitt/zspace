@@ -3,7 +3,7 @@ import '../models/inventory_item_model.dart';
 import '../models/market_item_model.dart';
 import '../models/user_model.dart';
 
-class JsonLocalDataSource implements LocalDataRepository {
+class MockLocalDataSource implements LocalDataRepository {
   @override
   Future<void> deleteUser() {
     // TODO: implement deleteUser
@@ -35,7 +35,7 @@ class JsonLocalDataSource implements LocalDataRepository {
   }
 
   @override
-  Future<UserModel> getUser() {
+  UserModel getUser() {
     // TODO: implement getUser
     throw UnimplementedError();
   }
@@ -69,6 +69,16 @@ class JsonLocalDataSource implements LocalDataRepository {
   Future<bool> unEquipItem(int itemId) {
     // TODO: implement unEquipItem
     throw UnimplementedError();
+  }
+
+  @override
+  Stream<UserModel> get userStream {
+    throw UnimplementedError();
+  }
+
+  @override
+  set userStream(Stream<UserModel> _userStream) {
+    // TODO: implement userStream
   }
   /*@override
   Future<User> getUser() async {

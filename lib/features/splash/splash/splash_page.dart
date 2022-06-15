@@ -7,7 +7,7 @@ class SplashPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<SplashViewModel>.nonReactive(
       viewModelBuilder: () => SplashViewModel(),
-      onModelReady: (model) => model.init(),
+      onModelReady: (model) => model.init(context),
       builder: (context, viewModel, child) {
         return Scaffold(
           body: Center(

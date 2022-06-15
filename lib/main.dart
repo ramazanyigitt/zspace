@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:zspace/core/utils/router/app_router.dart';
 import 'package:zspace/features/splash/splash/splash_page.dart';
 import 'shared/app_theme.dart';
 import 'data/localization/messages.dart';
@@ -15,6 +16,7 @@ void main() async {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: () => GetMaterialApp(
+        navigatorKey: AppRouter().mainNavigatorKey,
         debugShowCheckedModeBanner: false,
         translations: Messages(),
         locale: Locale('en', 'US'),

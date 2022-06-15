@@ -4,15 +4,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../../data/models/episode_model.dart';
 import '../../../data/models/level_model.dart';
 import '../gameplay/game_page.dart';
 
 class LevelInformationViewModel extends BaseViewModel {
-  routeToGame(LevelModel level) {
-    Get.to(
+  routeToGame(EpisodeModel episode, LevelModel level) {
+    Get.off(
       () => GameWidget(
         game: GamePage(
-          level,
+          episodeModel: episode,
+          levelModel: level,
         ),
         loadingBuilder: (context) {
           return Container(

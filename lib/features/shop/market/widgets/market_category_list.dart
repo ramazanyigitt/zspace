@@ -6,19 +6,11 @@ import '../../../../shared/app_theme.dart';
 
 class MarketCategoryList extends StatelessWidget {
   final Function(MarketCategory) onCategorySelected;
-  final Function(MarketDirection) onDirectionSelected;
   final MarketCategory selectedCategory;
-  final MarketDirection selectedDirection;
-  final bool selectedExpire;
-  final Function(bool) onShowExpiredChanged;
   const MarketCategoryList({
     Key? key,
     required this.onCategorySelected,
-    required this.onDirectionSelected,
     required this.selectedCategory,
-    required this.selectedDirection,
-    required this.onShowExpiredChanged,
-    required this.selectedExpire,
   }) : super(key: key);
 
   @override
@@ -31,72 +23,12 @@ class MarketCategoryList extends StatelessWidget {
           Container(
             margin: EdgeInsets.only(left: 15.w),
             height: ((AppTheme().largeParagraphBoldText.fontSize)?.h ?? 0),
-            child: GestureDetector(
-              onTap: () {
-                onDirectionSelected(selectedDirection == MarketDirection.asc
-                    ? MarketDirection.desc
-                    : MarketDirection.asc);
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            'Products', //'Products on ${selectedCategory.getCategoryName}',
-                            style: AppTheme().largeParagraphBoldText.copyWith(
-                                  color: AppTheme().greyScale0,
-                                ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        Container(
-                          child: Icon(
-                            selectedDirection == MarketDirection.asc
-                                ? Icons.arrow_drop_down
-                                : Icons.arrow_drop_up,
-                            color: AppTheme().greyScale0,
-                            size: 28,
-                          ),
-                        ),
-                      ],
-                    ),
+            child: Text(
+              'Market',
+              style: AppTheme().largeParagraphBoldText.copyWith(
+                    color: AppTheme().greyScale0,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      onShowExpiredChanged(!selectedExpire);
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(right: 15.w),
-                      padding: EdgeInsets.symmetric(horizontal: 18),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: selectedExpire
-                              ? AppTheme().darkPrimaryColor
-                              : Colors.transparent,
-                          border: Border.all(
-                            color: selectedExpire
-                                ? AppTheme().darkPrimaryColor
-                                : AppTheme().greyScale4,
-                          )),
-                      height: 35.h,
-                      child: Center(
-                        child: Text(
-                          'Include expired',
-                          style:
-                              AppTheme().extraSmallParagraphMediumText.copyWith(
-                                    color: selectedExpire
-                                        ? AppTheme().greyScale6
-                                        : AppTheme().greyScale2,
-                                  ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           SizedBox(

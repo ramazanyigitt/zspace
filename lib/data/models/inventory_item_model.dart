@@ -25,7 +25,7 @@ class InventoryItemModel extends InventoryItem {
   final int? id;
   final int? itemId;
   final int? userId;
-  final bool? isEquipped;
+  bool? isEquipped;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final MarketItemModel? item;

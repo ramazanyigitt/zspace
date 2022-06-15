@@ -1,0 +1,14 @@
+{
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InJhbWF6YW4iLCJwYXNzd29yZCI6IjEyMyIsImlhdCI6MTY1NTA0NDgxMn0.bIXhvnu1dMl7xO7jAO8cI23YwB8q4OaD9x8VtIeEKio",
+    "user": {
+        "id": 4,
+        "userName": "ramazan",
+        "password": "123",
+        "emailAddress": null,
+        "phoneNumber": null,
+        "credit": 0,
+        "levelId": 1,
+        "lastLogin": "2022-06-12T14:40:12.401Z",
+        "createdAt": "2022-06-12T14:40:12.402Z"
+    }
+}

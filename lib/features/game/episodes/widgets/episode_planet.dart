@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zspace/data/models/episode_model.dart';
+import 'package:zspace/shared/app_images.dart';
+
+import '../../../../shared/app_theme.dart';
 
 class StagePlanet extends StatelessWidget {
-  StagePlanet();
+  final EpisodeModel episode;
+  StagePlanet(this.episode);
 
   @override
   Widget build(BuildContext context) {
@@ -13,32 +18,28 @@ class StagePlanet extends StatelessWidget {
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
               width: 200.w,
               child: Image.asset(
-                "assets/images/planet.png",
+                episode.image!.appImage,
                 fit: BoxFit.scaleDown,
               ),
             ),
             SizedBox(height: 20.h),
             Text(
-              "Bölüm uzunluğu: 50",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w500,
-              ),
+              "${episode.name!}",
+              style: AppTheme().paragraphSemiBoldText.copyWith(
+                    color: Colors.white,
+                  ),
             ),
             SizedBox(height: 5.h),
             Text(
-              "Eski insan türüne ait gezegen",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-              ),
+              "Total ${episode.levels!.length} Level",
+              style: AppTheme().smallParagraphMediumText.copyWith(
+                    color: Colors.white,
+                  ),
             ),
           ],
         ),

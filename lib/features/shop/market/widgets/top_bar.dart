@@ -40,10 +40,10 @@ class _TopBarState extends State<TopBar> {
             ],
           ),
         ),
-        SizedBox(
+        /*SizedBox(
           height: 15,
-        ),
-        InkWell(
+        ),*/
+        /*InkWell(
           onTap: () {
             //
           },
@@ -76,7 +76,7 @@ class _TopBarState extends State<TopBar> {
               ],
             ),
           ),
-        ),
+        ),*/
       ],
     );
   }

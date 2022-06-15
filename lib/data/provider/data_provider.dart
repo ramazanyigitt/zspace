@@ -1,4 +1,7 @@
 import 'package:dartz/dartz.dart';
+import 'package:zspace/domain/entities/episode.dart';
+import '../enums/win_point_category.dart';
+import '../models/inventory_item_model.dart';
 import '../models/market_item_model.dart';
 import '../models/user_model.dart';
 import '../../domain/entities/user.dart';
@@ -48,33 +51,40 @@ class DataProvider implements DataRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> buyItem(int marketItemId) {
-    // TODO: implement buyItem
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, bool>> equipItem(int inventoryItemId) {
-    // TODO: implement equipItem
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, List<InventoryItem>>> getEquippedInventory() {
-    // TODO: implement getEquippedInventory
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, List<InventoryItem>>> getInventory() {
-    // TODO: implement getInventory
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, List<MarketItemModel>>> getMarketItems() async {
+  Future<Either<Failure, List<InventoryItem>>> buyItem(int marketItemId) async {
     try {
-      final remoteData = await remoteDataSource.getMarketItems();
+      final remoteData = await remoteDataSource.buyItem(marketItemId);
+      return Right(remoteData);
+    } on ServerFailure catch (e) {
+      return Left(e);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<InventoryItem>>> getEquippedInventory() async {
+    try {
+      final remoteData = await remoteDataSource.getEquippedInventory();
+      return Right(remoteData);
+    } on ServerFailure catch (e) {
+      return Left(e);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<InventoryItem>>> getInventory() async {
+    try {
+      final remoteData = await remoteDataSource.getInventory();
+      return Right(remoteData);
+    } on ServerFailure catch (e) {
+      return Left(e);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<MarketItemModel>>> getMarketItems(
+      MarketCategory category) async {
+    try {
+      final remoteData = await remoteDataSource.getMarketItems(category);
       return Right(remoteData);
     } on ServerFailure catch (e) {
       return Left(e);
@@ -91,7 +101,7 @@ class DataProvider implements DataRepository {
   Future<Either<Failure, UserModel>> login(
       String username, String password) async {
     try {
-      final remoteData = await remoteDataSource.login();
+      final remoteData = await remoteDataSource.login(username, password);
       return Right(remoteData);
     } on ServerFailure catch (e) {
       return Left(e);
@@ -111,8 +121,33 @@ class DataProvider implements DataRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> unEquipItem(int inventoryItemId) {
-    // TODO: implement unEquipItem
-    throw UnimplementedError();
+  Future<Either<Failure, InventoryItem>> equipItem(int inventoryItemId) async {
+    try {
+      final remoteData = await remoteDataSource.equipItem(inventoryItemId);
+      return Right(remoteData);
+    } on ServerFailure catch (e) {
+      return Left(e);
+    }
+  }
+
+  @override
+  Future<Either<Failure, InventoryItem>> unEquipItem(
+      int inventoryItemId) async {
+    try {
+      final remoteData = await remoteDataSource.unEquipItem(inventoryItemId);
+      return Right(remoteData);
+    } on ServerFailure catch (e) {
+      return Left(e);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Episode>>> getEpisodes() async {
+    try {
+      final remoteData = await remoteDataSource.getEpisodes();
+      return Right(remoteData);
+    } on ServerFailure catch (e) {
+      return Left(e);
+    }
   }
 }

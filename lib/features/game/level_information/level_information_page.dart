@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:stacked/stacked.dart';
+import 'package:zspace/data/models/episode_model.dart';
 
 import '../../../core/utils/lottie/lottie_cache.dart';
+import '../../../data/enums/creature_types.dart';
 import '../../../data/models/level_model.dart';
 import '../../../injection_container.dart';
 import '../../../shared/app_images.dart';
@@ -10,10 +12,14 @@ import '../../../shared/app_theme.dart';
 import '../../_components/theme_button.dart';
 import 'level_information_viewmodel.dart';
 
+part 'creatures_information_card.dart';
+
 class LevelInformationPage extends StatelessWidget {
+  final EpisodeModel episode;
   final LevelModel level;
   const LevelInformationPage({
     Key? key,
+    required this.episode,
     required this.level,
   }) : super(key: key);
 
@@ -72,7 +78,7 @@ class LevelInformationPage extends StatelessWidget {
                           width: 130,
                           height: 130,
                           child: Image.asset(
-                            "assets/images/planet.png",
+                            episode.image!.appImage,
                             fit: BoxFit.scaleDown,
                           ),
                         ),
@@ -107,18 +113,8 @@ class LevelInformationPage extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            child: Container(
-                              margin: EdgeInsets.symmetric(
-                                vertical: 20,
-                                horizontal: 20,
-                              ),
-                              child: Text(
-                                '${level.creatureTypes}',
-                                style:
-                                    AppTheme().largeParagraphBoldText.copyWith(
-                                          color: AppTheme().greyScale5,
-                                        ),
-                              ),
+                            child: _CreaturesInformationCard(
+                              level: level,
                             ),
                           ),
                           Align(
@@ -126,12 +122,12 @@ class LevelInformationPage extends StatelessWidget {
                             child: Container(
                               margin: EdgeInsets.only(top: 30),
                               child: ThemeButton(
-                                text: "Başlat",
+                                text: "Start",
                                 width: 200,
                                 height: 67,
                                 elevation: 0,
                                 onTap: () {
-                                  viewModel.routeToGame(level);
+                                  viewModel.routeToGame(episode, level);
                                 },
                                 textStyle: AppTheme().paragraphSemiBoldText,
                                 color: Colors.black26,

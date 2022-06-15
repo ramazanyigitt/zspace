@@ -29,7 +29,7 @@ class RestApiHttpService {
   }
 
   Future<T> requestAndHandle<T>(
-    RestApiRequest apiRequest, {
+    IRestApiRequest apiRequest, {
     bool removeBaseUrl = false,
     required dynamic parseModel,
     bool isRawJson = false,
@@ -40,7 +40,7 @@ class RestApiHttpService {
   }
 
   Future<List<T>> requestAndHandleList<T>(
-    RestApiRequest apiRequest, {
+    IRestApiRequest apiRequest, {
     bool removeBaseUrl = false,
     required dynamic parseModel,
     bool isRawJson = false,
@@ -53,7 +53,7 @@ class RestApiHttpService {
     );
   }
 
-  Future<Response> request(RestApiRequest apiRequest,
+  Future<Response> request(IRestApiRequest apiRequest,
       {bool removeBaseUrl = false}) async {
     Response resp;
     String url = apiRequest.endPoint;
@@ -101,7 +101,7 @@ class RestApiHttpService {
   }
 
   Future<T> requestFormAndHandle<T>(
-    RestApiRequest apiRequest, {
+    IRestApiRequest apiRequest, {
     required dynamic parseModel,
     bool isRawJson = false,
   }) async {
@@ -111,7 +111,7 @@ class RestApiHttpService {
   }
 
   Future<List<T>> requestFormAndHandleList<T>(
-    RestApiRequest apiRequest, {
+    IRestApiRequest apiRequest, {
     required dynamic parseModel,
     bool isRawJson = false,
   }) async {
@@ -121,7 +121,7 @@ class RestApiHttpService {
   }
 
   Future<Response> requestForm(
-    RestApiRequest apiRequest,
+    IRestApiRequest apiRequest,
   ) async {
     Response resp;
     String url = apiRequest.endPoint;
@@ -168,7 +168,7 @@ class RestApiHttpService {
   }
 
   Future<Response> requestFile(
-    RestApiRequest apiRequest, {
+    IRestApiRequest apiRequest, {
     required String fileFieldName,
     required File file,
     Function(int, int)? onSendProgress,

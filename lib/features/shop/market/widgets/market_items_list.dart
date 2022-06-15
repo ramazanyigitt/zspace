@@ -3,7 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zspace/features/_components/local_image_box.dart';
 
 import '../../../../../shared/app_theme.dart';
+import '../../../../core/utils/router/app_navigator.dart';
 import '../../../../data/models/market_item_model.dart';
+import '../../../../shared/app_images.dart';
+import '../../market_item_detail/market_item_detail_page.dart';
 
 class MarketItemsList extends StatelessWidget {
   final List<MarketItemModel> marketItems;
@@ -23,7 +26,7 @@ class MarketItemsList extends StatelessWidget {
             ? SliverToBoxAdapter(
                 child: Center(
                   child: Text(
-                    'No offers available',
+                    'No items available',
                     style: AppTheme().paragraphSemiBoldText.copyWith(
                           color: AppTheme().greyScale0,
                         ),
@@ -55,10 +58,10 @@ class MarketItemsList extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(10),
         onTap: () {
-          /*AppNavigator.push(
+          AppNavigator.push(
             context: context,
-            child: MarketItemsDetailPage(winItem: winItem),
-          );*/
+            child: MarketItemDetailPage(marketItem: marketItem),
+          );
         },
         child: Ink(
           decoration: BoxDecoration(
@@ -71,11 +74,14 @@ class MarketItemsList extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               (marketItem.imageUrl != null)
-                  ? Container(
-                      width: 64.w,
-                      height: 64.w,
-                      child: Center(
-                        child: Image.network(marketItem.imageUrl!),
+                  ? Hero(
+                      tag: marketItem.name!,
+                      child: Container(
+                        width: 64.w,
+                        height: 64.w,
+                        child: Center(
+                          child: Image.asset(marketItem.imageUrl!.appImage),
+                        ),
                       ),
                     )
                   : LocalImageBox(

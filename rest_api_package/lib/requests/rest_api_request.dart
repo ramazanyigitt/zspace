@@ -15,21 +15,23 @@ abstract class IRestApiRequest {
   Map<String, dynamic> queryParameters = {};
   Map<String, dynamic> body = {};
   RequestMethod requestMethod = RequestMethod.GET;
+  String? bearerToken;
 
   Future<void> handleRequest(Response response) async {}
 }
 
-class RestApiRequest {
+class RestApiRequest extends IRestApiRequest {
   RestApiRequest({
-    this.endPoint = "/",
-    this.bearerToken,
-    this.body = const {},
-    this.queryParameters = const {},
-    this.requestMethod = RequestMethod.GET,
-  });
-  String endPoint;
-  String? bearerToken;
-  Map<String, dynamic> queryParameters;
-  Map<String, dynamic> body;
-  RequestMethod requestMethod;
+    String endPoint = "/",
+    String? bearerToken,
+    Map<String, dynamic> body = const {},
+    Map<String, dynamic> queryParameters = const {},
+    RequestMethod requestMethod = RequestMethod.GET,
+  }) {
+    this.endPoint = endPoint;
+    this.bearerToken = bearerToken;
+    this.body = body;
+    this.queryParameters = queryParameters;
+    this.requestMethod = requestMethod;
+  }
 }

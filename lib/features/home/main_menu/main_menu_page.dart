@@ -123,7 +123,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
                       ),
                       ThemeButtonIcon(
                         'settings_button'.tr,
-                        onTap: () {},
+                        onTap: viewModel.routeToSettingsPage,
                         buttonIcon: Icons.settings,
                         opacity: 0.4,
                         iconColor: AppTheme().greyScale4,

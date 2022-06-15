@@ -10,7 +10,7 @@ import 'dart:ui' as ui;
 import '../../explodable_object.dart';
 
 class RedLaser extends Laser with ExplodableObject implements GameObject {
-  List<Vector2> hitBox;
+  List<Vector2>? hitBox;
   RedLaser({
     required GameObject shooter,
     required Vector2 target,
@@ -47,6 +47,7 @@ class RedLaser extends Laser with ExplodableObject implements GameObject {
     ];
   }
 
+  Vector2? speed;
   @override
   Future<void> onLoad() async {
     super.onLoad();
@@ -58,15 +59,13 @@ class RedLaser extends Laser with ExplodableObject implements GameObject {
   @override
   void update(double dt) {
     super.update(dt);
-    final ds = getSpeed() * dt;
-
-    final diff = target - position;
-    if (diff.length < ds) {
-      position.setFrom(target);
-    } else {
-      diff.scaleTo(ds);
-      position.setFrom(position + diff);
+    if (speed == null) {
+      final ds = getSpeed() * dt;
+      speed = target - position;
+      speed!.scaleTo(ds);
     }
+
+    position.setFrom(position + speed!);
   }
 
   void rotateToEnemy() {
@@ -83,8 +82,8 @@ class RedLaser extends Laser with ExplodableObject implements GameObject {
       if (other != shooter) {
         other.getDamageNormal(getDamage());
         log('Armor: ${other.getArmor()} shield ${other.getShield()}');
-        final diff = target - position;
-        createSmallExplode(this.gameRef, diff);
+        final diff = other.position - position;
+        createExtraSmallExplode(this.gameRef, diff);
         this.gameRef.remove(this);
         this.removeFromParent();
       }

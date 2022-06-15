@@ -1,0 +1,15 @@
+{
+    "id": 1,
+    "userName": "tester",
+    "emailAddress": "ramazan@yigit.tc",
+    "phoneNumber": "123456",
+    "credit": 0,
+    "levelId": null,
+    "roleUser": {
+        "id": 1,
+        "userId": 1,
+        "roles": []
+    },
+    "createdAt": "2022-06-12T14:52:40.077Z",
+    "lastLogin": "2022-06-12T14:52:40.077Z"
+}

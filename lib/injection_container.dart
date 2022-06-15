@@ -8,7 +8,8 @@ import 'package:zspace/features/game/_services/ispawn_service.dart';
 import 'package:zspace/features/game/_services/spawn_service.dart';
 import 'core/services/user_service.dart';
 import 'core/utils/lottie/lottie_cache.dart';
-import 'data/data_sources/local_json_data_source.dart';
+import 'data/data_sources/hive_data_source.dart';
+import 'data/data_sources/mock_local_data_source.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 
 import 'core/platform/network_info.dart';
@@ -36,10 +37,11 @@ Future<void> init() async {
   );
 
   //Data
-  /*final hiveDataSource = HiveDataSource();
-  await hiveDataSource.init();*/
+  final hiveDataSource = HiveDataSource();
+  await hiveDataSource.init();
   locator.registerLazySingleton<LocalDataRepository>(
-    () => JsonLocalDataSource(),
+    () => hiveDataSource,
+    //() => MockLocalDataSource(),
   );
 
   locator.registerLazySingleton<RemoteDataRepository>(
@@ -60,9 +62,6 @@ Future<void> init() async {
   );
   locator.registerLazySingleton(
     () => LottieCache(),
-  );
-  locator.registerLazySingleton(
-    () => UserService(),
   );
 
   //!Services

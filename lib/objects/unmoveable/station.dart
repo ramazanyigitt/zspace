@@ -4,7 +4,7 @@ import 'package:flame/components.dart';
 import '../game_object.dart';
 
 abstract class Station extends GameObject {
-  List<Vector2> hitBox;
+  List<Vector2>? hitBox;
   Station({
     ui.Image? image,
     SpriteAnimationData? animationData,

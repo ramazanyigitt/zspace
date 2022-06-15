@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../shared/app_theme.dart';
 
+//* This class helping us to create a custom text field with specific required ready properties.
+
 class SignTextFormField extends StatefulWidget {
   final TextEditingController textController;
   final String labelText;
@@ -27,6 +29,8 @@ class SignTextFormField extends StatefulWidget {
   final String? helperText;
   final bool autovalidateMode;
   final Radius? borderRadiusTopLeft, borderRadiusBottomLeft;
+  final InputBorder? customBorder;
+  final int? maxLines;
   const SignTextFormField({
     Key? key,
     required this.textController,
@@ -39,7 +43,7 @@ class SignTextFormField extends StatefulWidget {
     this.isEnabled = true,
     this.prefixIcon,
     this.suffixIcon,
-    this.obscureIconColor: const Color(0x80FFFFFF),
+    this.obscureIconColor: const Color(0xFF000000),
     this.obscureIconSize: 22,
     this.validatorEmptyMessage: 'This field can not be empty.',
     this.validator,
@@ -54,6 +58,8 @@ class SignTextFormField extends StatefulWidget {
     this.style,
     this.helperText,
     this.autovalidateMode: false,
+    this.customBorder,
+    this.maxLines: 1,
   }) : super(key: key);
 
   @override
@@ -85,6 +91,7 @@ class _SignTextFormFieldState extends State<SignTextFormField> {
         readOnly: !widget.isEnabled,
         controller: widget.textController,
         obscureText: obscureVisible,
+        maxLines: widget.maxLines,
         decoration: InputDecoration(
           helperText: widget.helperText,
           labelText: hasFocus
@@ -161,41 +168,40 @@ class _SignTextFormFieldState extends State<SignTextFormField> {
               topRight: Radius.circular(widget.borderRadius),
             ),
           ),
-          border: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: widget.borderColor,
-              width: 1,
-            ),
-            borderRadius: BorderRadius.only(
-              bottomLeft: widget.borderRadiusBottomLeft ??
-                  Radius.circular(widget.borderRadius),
-              bottomRight: Radius.circular(widget.borderRadius),
-              topLeft: widget.borderRadiusTopLeft ??
-                  Radius.circular(widget.borderRadius),
-              topRight: Radius.circular(widget.borderRadius),
-            ),
-          ),
+          border: widget.customBorder ??
+              OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: widget.borderColor,
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: widget.borderRadiusBottomLeft ??
+                      Radius.circular(widget.borderRadius),
+                  bottomRight: Radius.circular(widget.borderRadius),
+                  topLeft: widget.borderRadiusTopLeft ??
+                      Radius.circular(widget.borderRadius),
+                  topRight: Radius.circular(widget.borderRadius),
+                ),
+              ),
           filled: true,
           fillColor: widget.fillColor,
           contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
           floatingLabelBehavior: FloatingLabelBehavior.always,
           prefixIcon: widget.prefixIcon,
-          suffixIcon:
-              /*widget.obscureVisibility
-            ? InkWell(
-                onTap: () => setState(
-                  () => obscureVisible = !obscureVisible,
-                ),
-                child: Icon(
-                  obscureVisible
-                      ? Icons.visibility_outlined
-                      : Icons.visibility_off_outlined,
-                  color: widget.obscureIconColor,
-                  size: widget.obscureIconSize,
-                ),
-              )
-            : */
-              widget.suffixIcon,
+          suffixIcon: widget.obscureVisibility
+              ? InkWell(
+                  onTap: () => setState(
+                    () => obscureVisible = !obscureVisible,
+                  ),
+                  child: Icon(
+                    obscureVisible
+                        ? Icons.visibility_outlined
+                        : Icons.visibility_off_outlined,
+                    color: widget.obscureIconColor,
+                    size: widget.obscureIconSize,
+                  ),
+                )
+              : widget.suffixIcon,
         ),
         style: widget.style ??
             AppTheme().smallParagraphRegularText.copyWith(

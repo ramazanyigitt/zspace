@@ -1,4 +1,6 @@
 import 'package:dartz/dartz.dart';
+import 'package:zspace/data/enums/win_point_category.dart';
+import 'package:zspace/domain/entities/episode.dart';
 
 import '../../core/errors/failure.dart';
 import '../entities/inventory_item.dart';
@@ -16,13 +18,16 @@ abstract class DataRepository {
 
   Future<Either<Failure, List<InventoryItem>>> getEquippedInventory();
 
-  Future<Either<Failure, bool>> equipItem(int inventoryItemId);
+  Future<Either<Failure, InventoryItem>> equipItem(int inventoryItemId);
 
-  Future<Either<Failure, bool>> unEquipItem(int inventoryItemId);
+  Future<Either<Failure, InventoryItem>> unEquipItem(int inventoryItemId);
 
-  Future<Either<Failure, bool>> buyItem(int marketItemId);
+  Future<Either<Failure, List<InventoryItem>>> buyItem(int marketItemId);
 
   Future<Either<Failure, bool>> sellItem(int inventoryItemId);
 
-  Future<Either<Failure, List<MarketItem>>> getMarketItems();
+  Future<Either<Failure, List<MarketItem>>> getMarketItems(
+      MarketCategory category);
+
+  Future<Either<Failure, List<Episode>>> getEpisodes();
 }

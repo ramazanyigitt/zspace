@@ -4,7 +4,7 @@ import 'package:flame/components.dart';
 import '../game_object.dart';
 
 abstract class Meteor extends GameObject {
-  List<Vector2> hitBox;
+  List<Vector2>? hitBox;
   Meteor({
     ui.Image? image,
     SpriteAnimationData? animationData,

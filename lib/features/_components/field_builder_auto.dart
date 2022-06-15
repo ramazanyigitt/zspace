@@ -4,6 +4,8 @@ import '../../shared/app_theme.dart';
 import 'classic_text.dart';
 import 'sign_text_form_field.dart';
 
+//* An improved text field for showing errors with default animations and uses easily.
+
 class FieldBuilderAuto extends StatelessWidget {
   final TextEditingController controller;
   final String text, hint;
@@ -18,6 +20,10 @@ class FieldBuilderAuto extends StatelessWidget {
   final Function(String?)? onChanged;
   final String? helperText;
   final bool autovalidateMode;
+  final bool obscureVisibility;
+  final int? maxLines;
+  final Color fillColor, borderColor;
+  final Color obscureIconColor;
 
   const FieldBuilderAuto({
     Key? key,
@@ -38,6 +44,11 @@ class FieldBuilderAuto extends StatelessWidget {
     this.onChanged,
     this.helperText,
     this.autovalidateMode: false,
+    this.obscureVisibility: false,
+    this.maxLines: 1,
+    this.fillColor: Colors.white,
+    this.borderColor: Colors.black,
+    this.obscureIconColor: const Color(0xFF000000),
   }) : super(key: key);
 
   @override
@@ -64,10 +75,11 @@ class FieldBuilderAuto extends StatelessWidget {
                     textController: controller,
                     labelText: '',
                     hintText: hint,
-                    obscureVisibility: false,
+                    obscureVisibility: obscureVisibility,
+                    obscureIconColor: obscureIconColor,
                     keyboardType: keyboardType,
-                    borderColor: Colors.transparent,
-                    fillColor: Colors.white,
+                    borderColor: borderColor,
+                    fillColor: fillColor,
                     hintColor: Colors.black,
                     borderRadius: 8,
                     validator: validator,
@@ -79,6 +91,7 @@ class FieldBuilderAuto extends StatelessWidget {
                     onChanged: onChanged,
                     helperText: helperText,
                     autovalidateMode: autovalidateMode,
+                    maxLines: maxLines,
                   ),
                 ),
                 if (rightWidget != null) rightWidget!,

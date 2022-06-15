@@ -3,7 +3,9 @@ import '../../data/models/market_item_model.dart';
 import '../../data/models/user_model.dart';
 
 abstract class LocalDataRepository {
-  Future<UserModel> getUser();
+  UserModel getUser();
+
+  late Stream<UserModel> userStream;
 
   Future<void> saveUser(UserModel userModel);
 

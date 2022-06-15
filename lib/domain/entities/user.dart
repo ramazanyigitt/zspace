@@ -12,6 +12,7 @@ class User extends Equatable {
     this.createdAt,
     this.lastLogin,
     this.accessToken,
+    this.stayLoggedIn,
   });
 
   final int? id;
@@ -24,6 +25,7 @@ class User extends Equatable {
   final DateTime? createdAt;
   final DateTime? lastLogin;
   final String? accessToken;
+  final bool? stayLoggedIn;
 
   @override
   List<Object?> get props => [
@@ -37,5 +39,6 @@ class User extends Equatable {
         createdAt,
         lastLogin,
         accessToken,
+        stayLoggedIn,
       ];
 }

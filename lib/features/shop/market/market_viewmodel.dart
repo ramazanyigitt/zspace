@@ -25,7 +25,7 @@ class MarketViewModel extends BaseViewModel {
     isInited = false;
     isLoading = true;
     await Future.wait([
-      getWinItems(),
+      getMarketItems(),
     ]);
     isLoading = false;
     isInited = true;
@@ -36,31 +36,14 @@ class MarketViewModel extends BaseViewModel {
     selectedCategory = category;
     isLoading = true;
     notifyListeners();
-    await getWinItems();
+    await getMarketItems();
     isLoading = false;
     notifyListeners();
   }
 
-  Future<void> changeDirection(MarketDirection direction) async {
-    selectedDirection = direction;
-    isLoading = true;
-    notifyListeners();
-    await getWinItems();
-    isLoading = false;
-    notifyListeners();
-  }
-
-  Future<void> onShowExpiredChanged(bool status) async {
-    selectedExpire = status;
-    isLoading = true;
-    notifyListeners();
-    await getWinItems();
-    isLoading = false;
-    notifyListeners();
-  }
-
-  Future getWinItems() async {
-    final data = await locator<DataRepository>().getMarketItems();
+  Future getMarketItems() async {
+    final data =
+        await locator<DataRepository>().getMarketItems(selectedCategory);
     if (data is Right) {
       marketItems = (data as Right).value;
     } else {

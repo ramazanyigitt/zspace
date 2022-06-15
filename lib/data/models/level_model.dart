@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:zspace/data/models/spawn_model.dart';
+
 import '../enums/creature_types.dart';
 import '../../domain/entities/level.dart';
 
@@ -7,16 +9,16 @@ class LevelModel extends Level {
   LevelModel({
     this.level,
     this.episodeId,
-    this.creatureTypes,
+    this.spawnModels,
   }) : super(
           level: level,
           episodeId: episodeId,
-          creatureTypes: creatureTypes,
+          spawnModels: spawnModels,
         );
 
   final int? level;
   final int? episodeId;
-  final List<CreatureType>? creatureTypes;
+  final List<SpawnModel>? spawnModels;
 
   fromRawJson(String str) => fromJson(json.decode(str));
 
@@ -25,17 +27,17 @@ class LevelModel extends Level {
   fromJson(Map<String, dynamic> json) => LevelModel(
         level: json["level"] == null ? null : json["level"],
         episodeId: json["episodeId"] == null ? null : json["episodeId"],
-        creatureTypes: json["creatureTypes"] == null
+        spawnModels: json["spawnModel"] == null
             ? null
-            : List<CreatureType>.from(
-                json["creatureTypes"].map((x) => CreatureType.values[x])),
+            : List<SpawnModel>.from(
+                json["spawnModel"].map((x) => SpawnModel().fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "level": level == null ? null : level,
         "episodeId": episodeId == null ? null : episodeId,
-        "creatureTypes": creatureTypes == null
+        "spawnModel": spawnModels == null
             ? null
-            : List<dynamic>.from(creatureTypes?.map((x) => x.index) ?? []),
+            : List<dynamic>.from(spawnModels?.map((x) => x.toJson()) ?? []),
       };
 }

@@ -85,13 +85,10 @@ class _MarketPageState extends State<MarketPage>
                                       height: 10.h,
                                     ),
                                     TopBar(),
-                                    SizedBox(
-                                      height: 15.h,
-                                    ),
                                   ],
                                 ),
                               ),
-                              expandedHeight: 150,
+                              expandedHeight: 50,
                             ),
                           ),
                         ];
@@ -135,24 +132,9 @@ class _MarketPageState extends State<MarketPage>
                                               MarketCategoryList(
                                                 selectedCategory:
                                                     viewModel.selectedCategory,
-                                                selectedDirection:
-                                                    viewModel.selectedDirection,
-                                                selectedExpire:
-                                                    viewModel.selectedExpire,
                                                 onCategorySelected: (category) {
                                                   viewModel
                                                       .changeCategory(category);
-                                                },
-                                                onDirectionSelected:
-                                                    (direction) {
-                                                  viewModel.changeDirection(
-                                                      direction);
-                                                },
-                                                onShowExpiredChanged:
-                                                    (bool value) {
-                                                  viewModel
-                                                      .onShowExpiredChanged(
-                                                          value);
                                                 },
                                               ),
                                               SizedBox(
@@ -164,8 +146,31 @@ class _MarketPageState extends State<MarketPage>
                                       ),
                                     ),
                                     viewModel.isLoading
-                                        ? SliverToBoxAdapter(
-                                            child: CircularProgressIndicator(),
+                                        ? SliverPadding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 12.5.h,
+                                                horizontal: 15.w),
+                                            sliver: SliverToBoxAdapter(
+                                              child: Container(
+                                                child: Center(
+                                                  child: Container(
+                                                    width: 48.w,
+                                                    height: 48.w,
+                                                    child:
+                                                        CircularProgressIndicator
+                                                            .adaptive(
+                                                      valueColor:
+                                                          AlwaysStoppedAnimation<
+                                                              Color>(
+                                                        AppTheme()
+                                                            .darkPrimaryColor,
+                                                      ),
+                                                      strokeWidth: 3,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
                                           )
                                         : SliverPadding(
                                             padding: EdgeInsets.symmetric(

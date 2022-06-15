@@ -69,6 +69,33 @@ class ValidatorService {
     }
   }
 
+  String? passwordUpperLowerNumber(String? text, {int? minLength}) {
+    if (text?.isEmpty == true) {
+      return 'This field can not be empty.';
+    } else {
+      //Number contains at least one digit
+      RegExp numberExp = new RegExp(r'(?=.*[0-9])');
+      //Lowercase contains at least one lowercase letter
+      RegExp lowerExp = new RegExp(r'(?=.*[a-z])');
+      //Uppercase contains at least one uppercase letter
+      RegExp upperExp = new RegExp(r'(?=.*[A-Z])');
+
+      if (!numberExp.hasMatch(text!)) {
+        return 'Must contain 1 number.';
+      }
+      if (!lowerExp.hasMatch(text)) {
+        return 'Must contain 1 lowercase letter.';
+      }
+      if (!upperExp.hasMatch(text)) {
+        return 'Must contain 1 uppercase letter.';
+      }
+      if (minLength != null) if (text.length < minLength) {
+        return 'Please enter a $minLength digit password.';
+      }
+      return null;
+    }
+  }
+
   String? email(String? text) {
     if (text?.isEmpty == true) {
       return 'This field can not be empty.';

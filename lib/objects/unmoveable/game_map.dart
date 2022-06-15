@@ -8,15 +8,13 @@ import '../solid_object.dart';
 
 class GameMap extends GameObject with SolidObject {
   Image image;
-  List<Vector2> hitBox;
-  GameMap(this.image, {required this.hitBox, required Vector2 size})
+  GameMap(this.image, {required Vector2 size})
       : super(
           image: image,
           size: size,
-          hitBox: hitBox,
         ) {
     if (hitBox == null)
-      hitBox = [
+      this.hitBox = [
         Vector2(-1, -1),
         Vector2(-1, 1),
         Vector2(1, 1),

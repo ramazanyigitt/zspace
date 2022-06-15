@@ -5,6 +5,8 @@ import 'package:flame/extensions.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../game_object.dart';
+import '../lasers/red_laser.dart';
+import '../rockets/short_rocket.dart';
 
 abstract class Ship extends GameObject {
   Ship({
@@ -15,7 +17,7 @@ abstract class Ship extends GameObject {
     double? angle,
     Anchor? anchor,
     int? priority,
-    required List<Vector2> hitBox,
+    List<Vector2>? hitBox,
     bool playing: false,
   }) : super(
           image: image,
@@ -27,6 +29,17 @@ abstract class Ship extends GameObject {
           hitBox: hitBox,
           playing: playing,
         );
+
+  late bool targeting;
+  late bool moving;
+  String? lastMoveKey;
+
+  @override
+  Future<void> onLoad() async {
+    targeting = false;
+    moving = false;
+    super.onLoad();
+  }
 
   double _speed = 300;
   double _armor = 100;

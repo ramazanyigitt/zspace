@@ -1,4 +1,4 @@
-import '../../data/models/user_model.dart';
+/*import '../../data/models/user_model.dart';
 
 class UserService {
   UserModel? user;
@@ -11,3 +11,4 @@ class UserService {
     this.user = user;
   }
 }
+*/

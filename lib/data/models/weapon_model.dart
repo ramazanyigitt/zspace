@@ -20,8 +20,8 @@ class WeaponModel extends Weapon {
         );
 
   final int? id;
-  final int? damage;
-  final int? attackSpeed;
+  final num? damage;
+  final num? attackSpeed;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final int? itemId;

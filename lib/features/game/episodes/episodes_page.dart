@@ -80,7 +80,7 @@ class EpisodesPage extends StatelessWidget {
                   },
                   child: Swiper(
                     itemBuilder: (BuildContext context, int index) {
-                      return StagePlanet();
+                      return StagePlanet(viewModel.episodes[index]);
                     },
                     itemCount: viewModel.episodes.length,
                     viewportFraction: 0.55,
@@ -96,13 +96,15 @@ class EpisodesPage extends StatelessWidget {
                   child: Container(
                     margin: EdgeInsets.only(bottom: 40),
                     child: ThemeButton(
-                      text: "Yörüngeye Gir",
+                      text: "Enter orbit",
                       width: 200,
                       height: 100,
                       elevation: 0,
                       onTap: () {
                         viewModel.routeToLevelInformationPage(
-                            viewModel.episodes[currentEpisode].levels!.first);
+                          viewModel.episodes[currentEpisode],
+                          viewModel.episodes[currentEpisode].levels!.first,
+                        );
                       },
                       textStyle: AppTheme().paragraphSemiBoldText,
                       color: Colors.black26,

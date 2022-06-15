@@ -12,7 +12,7 @@ import '../../explodable_object.dart';
 class NormalExplosion extends Explosion
     with ExplodableObject
     implements GameObject {
-  List<Vector2> hitBox;
+  List<Vector2>? hitBox;
   GameObject explosionObject;
   NormalExplosion({
     required this.explosionObject,
@@ -23,12 +23,13 @@ class NormalExplosion extends Explosion
     Anchor? anchor,
     int? priority,
     required this.hitBox,
+    double? damage,
   }) : super(
           image: image,
           animationData: SpriteAnimationData.sequenced(
             amount: 25,
             stepTime: 0.05,
-            textureSize: size!,
+            textureSize: (size! / 2),
             loop: false,
             amountPerRow: 5,
           ),
@@ -37,16 +38,17 @@ class NormalExplosion extends Explosion
           angle: angle,
           anchor: anchor,
           hitBox: hitBox,
+          damage: damage,
         ) {
     anchor = Anchor.center;
   }
 
+  late List<PositionComponent> damaged;
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    setExplosionMilliseconds(750);
-    setDamage(15);
-    setExplosionRadius(100);
+    damaged = [];
+    setDamage(damage ?? 0);
   }
 
   @override
@@ -59,6 +61,11 @@ class NormalExplosion extends Explosion
     super.onCollision(intersectionPoints, other);
 
     if (other is Ship) {
+      if (other != explosionObject && !damaged.contains(other)) {
+        damaged.add(other);
+        other.getDamageNormal(getDamage());
+        log('Armor: ${other.getArmor()} shield ${other.getShield()}');
+      }
       /*if (other != shooter) {
         other.getArmor();
         this.gameRef.remove(this);

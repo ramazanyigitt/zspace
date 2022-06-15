@@ -1,8 +1,7 @@
 import 'package:flame/game.dart';
-
-import '../../../data/enums/creature_types.dart';
+import 'package:zspace/data/models/spawn_model.dart';
 
 abstract class SpawnService {
   Future<void> spawnCreatures<T extends FlameGame>(
-      T game, List<CreatureType> creatureTypes);
+      T game, List<SpawnModel> spawnModels);
 }

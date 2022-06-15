@@ -23,12 +23,14 @@ class GameViewModel extends BaseViewModel {
     required this.level,
   });
 
+  late bool isStarted;
   late final UserShip player;
   late final JoystickComponent joystick;
   final knobPaint = BasicPalette.blue.withAlpha(200).paint();
   final backgroundPaint = BasicPalette.blue.withAlpha(100).paint();
 
   Future<void> prepareGame() async {
+    isStarted = false;
     //Camera
     game.camera.viewport = FixedResolutionViewport(Vector2(1.sw, 1.sh));
 
@@ -37,14 +39,9 @@ class GameViewModel extends BaseViewModel {
     var mapImage = await game.images.load(AppImages.mapEpisode1Level1.gameMap);
     var map = GameMap(
       mapImage,
-      hitBox: [
-        Vector2(-1, -1),
-        Vector2(-1, 1),
-        Vector2(1, 1),
-        Vector2(1, -1),
-      ],
       size: Vector2(738, 1312),
     );
+    map.priority = -2;
     game.add(map);
 
     //User
@@ -84,10 +81,11 @@ class GameViewModel extends BaseViewModel {
     game.add(player);
     game.add(joystick);
 
-    locator<GameService>().spawnService.spawnCreatures(
+    await locator<GameService>().spawnService.spawnCreatures(
           game,
-          locator<GameService>().getCreatures(level),
+          locator<GameService>().getSpawnModels(level),
         );
+    isStarted = true;
   }
 
   gameOver() async {

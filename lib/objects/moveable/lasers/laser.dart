@@ -5,7 +5,7 @@ import 'package:flame/components.dart';
 import '../../game_object.dart';
 
 abstract class Laser extends GameObject {
-  List<Vector2> hitBox;
+  List<Vector2>? hitBox;
   Vector2 target;
   GameObject shooter;
   Laser({

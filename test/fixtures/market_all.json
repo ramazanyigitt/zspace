@@ -1,0 +1,61 @@
+[
+    {
+        "id": 3,
+        "name": "Speed Gen 1",
+        "buyPrice": 100,
+        "sellPrice": 10,
+        "stock": 10000,
+        "isActive": true,
+        "isSalable": true,
+        "description": "speed_gen_description",
+        "imageUrl": "assets/lasers/speed_gen.png",
+        "levelId": 1,
+        "createdAt": "2022-06-12T18:03:05.535Z",
+        "updatedAt": "2022-06-12T18:02:49.111Z",
+        "category": "EnergyGenerator",
+        "weapon": null,
+        "energyGenerator": {
+            "id": 7,
+            "shipSpeed": 10,
+            "createdAt": "2022-06-12T14:58:17.633Z",
+            "updatedAt": "2022-06-12T14:58:18.385Z",
+            "itemId": 3
+        },
+        "shieldGenerator": null,
+        "ship": null,
+        "level": {
+            "level": 1,
+            "episodeId": 1
+        }
+    },
+    {
+        "id": 2,
+        "name": "Red Laser",
+        "buyPrice": 100,
+        "sellPrice": 10,
+        "stock": 10000,
+        "isActive": true,
+        "isSalable": true,
+        "description": "red_laser_description",
+        "imageUrl": "assets/lasers/red_laser.png",
+        "levelId": 1,
+        "createdAt": "2022-06-12T15:10:44.575Z",
+        "updatedAt": "2022-06-12T15:06:22.751Z",
+        "category": "Weapon",
+        "weapon": {
+            "id": 2,
+            "damage": 20,
+            "attackSpeed": 1.2,
+            "createdAt": "2022-06-12T18:45:17.196Z",
+            "updatedAt": "2022-06-12T18:45:15.379Z",
+            "itemId": 2
+        },
+        "energyGenerator": null,
+        "shieldGenerator": null,
+        "ship": null,
+        "level": {
+            "level": 1,
+            "episodeId": 1
+        }
+    }
+]
