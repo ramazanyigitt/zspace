@@ -139,6 +139,12 @@ class InventoryViewModel extends BaseViewModel {
   Future<void> equipItem(InventoryItem? equipItem,
       {InventoryItem? unEquipItem}) async {
     log('Sending equip messages with $equipItem and $unEquipItem');
+    if (unEquipItem != null) {
+      unEquipItem.isEquipped = false;
+    }
+    if (equipItem != null) {
+      equipItem.isEquipped = true;
+    }
     await Future.wait(
       [
         if (unEquipItem != null)
@@ -147,12 +153,6 @@ class InventoryViewModel extends BaseViewModel {
           locator<DataRepository>().equipItem(equipItem.id!),
       ],
     );
-    if (unEquipItem != null) {
-      unEquipItem.isEquipped = false;
-    }
-    if (equipItem != null) {
-      equipItem.isEquipped = true;
-    }
   }
 }
 

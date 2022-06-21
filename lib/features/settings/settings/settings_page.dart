@@ -4,10 +4,13 @@ import 'package:stacked/stacked.dart';
 import 'package:zspace/features/_components/theme_button_icon.dart';
 import 'package:zspace/features/settings/settings/settings_viewmodel.dart';
 import '../../../core/utils/lottie/lottie_cache.dart';
+import '../../../domain/repositories/local_data_repository.dart';
 import '../../../injection_container.dart';
 import '../../../shared/app_images.dart';
 import '../../../shared/app_theme.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../authentication/login/login_page.dart';
 
 part 'top_bar.dart';
 
@@ -94,7 +97,12 @@ class _SettingsPageState extends State<SettingsPage> {
                         ThemeButtonIcon(
                           'Logout',
                           onTap: () {
-                            //
+                            locator<LocalDataRepository>().deleteUser();
+                            Get.offUntil(
+                                MaterialPageRoute(
+                                  builder: (context) => LoginPage(),
+                                ),
+                                (route) => false);
                           },
                           buttonIcon: Icons.logout,
                           opacity: 0.4,

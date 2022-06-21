@@ -11,6 +11,7 @@ import '../../explodable_object.dart';
 
 class RedLaser extends Laser with ExplodableObject implements GameObject {
   List<Vector2>? hitBox;
+  final double? damage;
   RedLaser({
     required GameObject shooter,
     required Vector2 target,
@@ -22,6 +23,7 @@ class RedLaser extends Laser with ExplodableObject implements GameObject {
     Anchor? anchor,
     int? priority,
     required this.hitBox,
+    this.damage,
   }) : super(
           shooter: shooter,
           image: image,
@@ -52,7 +54,7 @@ class RedLaser extends Laser with ExplodableObject implements GameObject {
   Future<void> onLoad() async {
     super.onLoad();
     setSpeed(750);
-    setDamage(15);
+    setDamage(this.damage ?? 15);
     //rotateToEnemy();
   }
 

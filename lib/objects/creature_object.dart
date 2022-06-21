@@ -1,7 +1,12 @@
 import 'dart:developer';
+import 'dart:math' as math;
 
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
+import 'package:zspace/domain/repositories/data_repository.dart';
+import 'package:zspace/features/_components/overlay/game_snackbar_overlay.dart';
+import 'package:zspace/features/game/gameplay/game_page.dart';
+import 'package:zspace/injection_container.dart';
 import 'package:zspace/objects/moveable/lasers/red_laser.dart';
 import 'package:zspace/objects/moveable/ships/ship.dart';
 import 'game_object.dart';
@@ -59,8 +64,39 @@ mixin CreatureObject on Ship {
     rotateToObject(userShip);
   }
 
+  Future<void> randomTeleport() async {
+    final int randomSecond = new math.Random().nextInt(10);
+    await Future.delayed(Duration(seconds: randomSecond));
+    if (gameRef.paused) {
+      randomTeleport();
+      return;
+    }
+    final maxSize = (this.gameRef as GamePage).size;
+    final double randomX =
+        new math.Random().nextInt(maxSize.x.toInt()).toDouble();
+    final double randomY =
+        new math.Random().nextInt(maxSize.y.toInt()).toDouble();
+    if (maxSize.x > randomX && maxSize.y > randomY) {
+      log('Inside world can teleport');
+      this.position = Vector2(randomX, randomY);
+      var userShip = gameRef.children.whereType<UserShip>().first;
+      for (int i = 0; i < 3; i++) {
+        await Future.delayed(Duration(milliseconds: 200));
+        shootLaser(
+          userShip,
+        );
+      }
+    } else {
+      log('Outside world can teleport x: $randomX y: $randomY maxSize: $maxSize');
+    }
+    final int randomWaitSecond = new math.Random().nextInt(5);
+    await Future.delayed(Duration(seconds: randomWaitSecond));
+    randomTeleport();
+  }
+
   void attackNearestTarget({
     String? lastKey,
+    double? damage,
   }) async {
     if (lastKey != lastMoveKey) return;
     if (targeting == true) return null;
@@ -80,14 +116,15 @@ mixin CreatureObject on Ship {
       return;
     }
     rotateToObject(enemy);
-    await shootLaser(enemy);
+    await shootLaser(enemy, damage: damage);
     await Future.delayed(Duration(milliseconds: 800));
     targeting = false;
   }
 
-  Future<void> shootLaser(GameObject enemy) async {
-    final laser =
-        await GameObject.createLaser<RedLaser>(this.gameRef, enemy, this);
+  Future<void> shootLaser(GameObject enemy, {double? damage}) async {
+    final laser = await GameObject.createLaser<RedLaser>(
+        this.gameRef, enemy, this,
+        damage: damage);
     this.gameRef.add(laser);
   }
 
@@ -104,7 +141,7 @@ mixin CreatureObject on Ship {
     if (enemy == null) {
       return;
     }
-    if (!gameRef.isAttached) return;
+    if (!gameRef.isAttached || gameRef.paused) return;
     await shootRocket(enemy);
     attackNearestTargetRocket(duration: duration);
   }
@@ -114,5 +151,17 @@ mixin CreatureObject on Ship {
 
     final enemy = component as Ship;
     return enemy;
+  }
+
+  giveCredit(int amount) {
+    locator<DataRepository>().addCredit(amount);
+    GameSnackbarOverlay().show(
+      text: '+$amount Credit',
+      buttonText: 'Ok',
+      forceOverlay: true,
+      fullTap: true,
+      onTap: () {},
+      removeDuration: Duration(seconds: 3),
+    );
   }
 }

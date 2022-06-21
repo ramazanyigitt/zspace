@@ -77,13 +77,13 @@ extension CreatureTypeExtension on CreatureType {
         return AppImages.ships.tuhitShip;
       case CreatureType.Korath:
         return AppImages.ships.korathShip;
-      /*case CreatureType.Rhapsody:
+      case CreatureType.Rhapsody:
         return AppImages.ships.rhapsodyShip;
       case CreatureType.Bastion:
         return AppImages.ships.bastionShip;
       case CreatureType.Ural:
         return AppImages.ships.uralShip;
-      case CreatureType.Peacock:
+      /*case CreatureType.Peacock:
         return AppImages.ships.peacockShip;
       case CreatureType.Spitfire:
         return AppImages.ships.spitfireShip;*/

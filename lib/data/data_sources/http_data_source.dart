@@ -1,11 +1,15 @@
 import 'dart:developer';
 
+import 'package:dartz/dartz.dart';
 import 'package:rest_api_package/requests/rest_api_request.dart';
 import 'package:rest_api_package/rest_api_package.dart';
 import 'package:zspace/data/models/episode_model.dart';
+import 'package:zspace/data/models/level_model.dart';
 import 'package:zspace/data/requests/get_equipped_inventory_request.dart';
 import 'package:zspace/data/requests/get_inventory_request.dart';
 import 'package:zspace/data/requests/get_market_items_request.dart';
+import 'package:zspace/domain/entities/level.dart';
+import 'package:zspace/domain/entities/episode.dart';
 import '../enums/win_point_category.dart';
 import '../models/error_model.dart';
 import '../models/market_item_model.dart';
@@ -18,11 +22,14 @@ import '../models/user_model.dart';
 import '../../domain/entities/user.dart';
 
 import '../../domain/repositories/remote_data_repository.dart';
+import '../requests/add_credit_request.dart';
 import '../requests/but_item_request.dart';
 import '../requests/equip_item_request.dart';
+import '../requests/get_current_level_request.dart';
 import '../requests/get_episodes_request.dart';
 import '../requests/login_request.dart';
 import '../requests/register_request.dart';
+import '../requests/set_level_request.dart';
 import '../requests/unequip_item_request.dart';
 
 class HttpDataSource implements RemoteDataRepository {
@@ -248,6 +255,51 @@ class HttpDataSource implements RemoteDataRepository {
       );
 
       return response;
+    } catch (e) {
+      log('e : $e');
+      throw ServerFailure(errorMessage: e.toString());
+    }
+  }
+
+  @override
+  Future<void> setLevel(int levelId) async {
+    try {
+      final response = await locator<RestApiHttpService>().request(
+        SetLevelRequest(levelId),
+      );
+      if (response.data.contains('success')) {
+        return;
+      } else {
+        throw response.data;
+      }
+    } catch (e) {
+      log('e : $e');
+      throw ServerFailure(errorMessage: e.toString());
+    }
+  }
+
+  @override
+  Future<LevelModel> getCurrentLevel() async {
+    try {
+      final response =
+          await locator<RestApiHttpService>().requestAndHandle<LevelModel>(
+        GetCurrentLevelRequest(),
+        parseModel: LevelModel(),
+      );
+      return response;
+    } catch (e) {
+      log('e : $e');
+      throw ServerFailure(errorMessage: e.toString());
+    }
+  }
+
+  @override
+  Future<void> addCredit(int amount) async {
+    try {
+      final response = await locator<RestApiHttpService>().request(
+        AddCreditRequest(amount: amount),
+      );
+      return;
     } catch (e) {
       log('e : $e');
       throw ServerFailure(errorMessage: e.toString());

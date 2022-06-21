@@ -32,6 +32,9 @@ class _AppImagesShips {
   late final leonovShip = base + 'leonov.png';
   late final korathShip = base + 'korath.png';
   late final nemerteaShip = base + 'nemertea.png';
+  late final bastionShip = base + 'bastion.png';
+  late final rhapsodyShip = base + 'rhapsody.png';
+  late final uralShip = base + 'ural.png';
 }
 
 class _AppImagesExplosions {

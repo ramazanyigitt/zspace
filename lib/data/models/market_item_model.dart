@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import '../enums/win_point_category.dart';
 import 'energy_generator_model.dart';
 import 'level_model.dart';
 import 'shield_generator_model.dart';
@@ -125,4 +126,26 @@ class MarketItemModel extends MarketItem {
         "ship": ship == null ? null : ship?.toJson(),
         "level": level == null ? null : level?.toJson(),
       };
+}
+
+extension CategoryExtension on MarketItemModel {
+  bool get isShip {
+    return category == MarketCategory.Ship.name;
+  }
+
+  bool get isWeapon {
+    return category == MarketCategory.Weapon.name;
+  }
+
+  bool get isShieldGenerator {
+    return category == MarketCategory.ShieldGenerator.name;
+  }
+
+  bool get isEnergyGenerator {
+    return category == MarketCategory.EnergyGenerator.name;
+  }
+
+  String get getShipPath {
+    return imageUrl!;
+  }
 }

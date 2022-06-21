@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:zspace/domain/entities/episode.dart';
+import 'package:zspace/domain/entities/level.dart';
 import '../enums/win_point_category.dart';
 import '../models/inventory_item_model.dart';
 import '../models/market_item_model.dart';
@@ -145,6 +146,36 @@ class DataProvider implements DataRepository {
   Future<Either<Failure, List<Episode>>> getEpisodes() async {
     try {
       final remoteData = await remoteDataSource.getEpisodes();
+      return Right(remoteData);
+    } on ServerFailure catch (e) {
+      return Left(e);
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> setLevel(int levelId) async {
+    try {
+      final remoteData = await remoteDataSource.setLevel(levelId);
+      return Right(remoteData);
+    } on ServerFailure catch (e) {
+      return Left(e);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Level>> getCurrentLevel() async {
+    try {
+      final remoteData = await remoteDataSource.getCurrentLevel();
+      return Right(remoteData);
+    } on ServerFailure catch (e) {
+      return Left(e);
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> addCredit(int amount) async {
+    try {
+      final remoteData = await remoteDataSource.addCredit(amount);
       return Right(remoteData);
     } on ServerFailure catch (e) {
       return Left(e);

@@ -10,10 +10,10 @@ import 'package:zspace/objects/moveable/lasers/red_laser.dart';
 import 'ship.dart';
 import 'dart:ui' as ui;
 
-class NemerteaShip extends Ship
+class BastionShip extends Ship
     with CreatureObject, ExplodableObject
     implements GameObject {
-  NemerteaShip({
+  BastionShip({
     ui.Image? image,
     Vector2? shipSize,
     Vector2? textureSize,
@@ -37,25 +37,30 @@ class NemerteaShip extends Ship
           position: position,
         ) {
     anchor = Anchor.center;
-    log('nemertea ?!');
+    log('bastion ?!');
     this.hitBox = [
-      Vector2(-1, -1),
+      Vector2(-0.25, -1),
       Vector2(-1, 1),
       Vector2(1, 1),
-      Vector2(1, -1),
+      Vector2(0.25, -1),
     ];
   }
 
   @override
   Future<void> onLoad() async {
-    log('nemertea onload!');
+    log('bastion onload!');
     super.onLoad();
-    attackNearestTargetRocket(duration: Duration(seconds: 3));
+    setArmor(200);
+    setShield(50);
+    setSpeed(100);
+    randomTeleport();
   }
 
   @override
   void update(double dt) {
     super.update(dt);
+    approachToUser(dt, getSpeed());
+    attackNearestTarget();
   }
 
   @override
@@ -66,8 +71,7 @@ class NemerteaShip extends Ship
 
   void onDie() {
     final diff = this.position - position;
-    createNormalExplode(this.gameRef, diff);
-    giveCredit(10);
+    createShipExplode(this.gameRef, diff);
     log('Patladı!');
     this.gameRef.remove(this);
     this.removeFromParent();

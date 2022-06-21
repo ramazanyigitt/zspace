@@ -10,6 +10,7 @@ import 'package:zspace/data/enums/creature_types.dart';
 import 'package:zspace/objects/moveable/lasers/red_laser.dart';
 import 'package:zspace/objects/moveable/rockets/rocket.dart';
 import 'package:zspace/objects/moveable/rockets/short_rocket.dart';
+import 'package:zspace/objects/moveable/ships/bastion.dart';
 import 'package:zspace/objects/moveable/ships/korath.dart';
 import 'package:zspace/objects/moveable/ships/nemertea.dart';
 import 'package:zspace/objects/moveable/ships/ship.dart';
@@ -151,6 +152,16 @@ class GameObject extends SpriteAnimationComponent
         playing: false,
         position: position,
       );
+    } else if (creatureType == CreatureType.Bastion) {
+      var creatureImage = await game.images.load(AppImages.ships.bastionShip);
+      return BastionShip(
+        image: creatureImage,
+        shipSize: Vector2(128.0, 128.0),
+        textureSize: Vector2(280.0, 280.0),
+        spriteAmount: 1,
+        playing: false,
+        position: position,
+      );
     } else {
       log("Error in GameObject",
           error: '$creatureType is not defined in GameObject');
@@ -159,10 +170,21 @@ class GameObject extends SpriteAnimationComponent
   }
 
   static Future<T> createLaser<T extends Laser>(
-      FlameGame game, GameObject target, GameObject shooter) async {
+    FlameGame game,
+    GameObject? target,
+    GameObject shooter, {
+    double? damage,
+    Vector2? targetPosition,
+    double? targetAngle,
+  }) async {
     if (T == RedLaser) {
       var creatureImage = await game.images.load(AppImages.lasers.redLaser);
-      final lastPosition = Vector2(target.position.x, target.position.y);
+      late final lastPosition;
+      if (target != null)
+        lastPosition = Vector2(target.position.x, target.position.y);
+      else {
+        lastPosition = Vector2(targetPosition!.x, targetPosition.y);
+      }
       return RedLaser(
         image: creatureImage,
         target: lastPosition,
@@ -177,6 +199,7 @@ class GameObject extends SpriteAnimationComponent
           Vector2(1, 1),
           Vector2(1, -1),
         ],
+        damage: damage,
       ) as T;
     } else {
       log("Error in GameObject", error: '$T is not defined in GameObject');

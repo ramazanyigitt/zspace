@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zspace/injection_container.dart';
 import '../../../../data/enums/win_point_category.dart';
 
+import '../../../../domain/repositories/local_data_repository.dart';
 import '../../../../shared/app_theme.dart';
 
 class MarketCategoryList extends StatelessWidget {
@@ -20,16 +22,32 @@ class MarketCategoryList extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            margin: EdgeInsets.only(left: 15.w),
-            height: ((AppTheme().largeParagraphBoldText.fontSize)?.h ?? 0),
-            child: Text(
-              'Market',
-              style: AppTheme().largeParagraphBoldText.copyWith(
-                    color: AppTheme().greyScale0,
-                  ),
-              overflow: TextOverflow.ellipsis,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Container(
+                margin: EdgeInsets.only(left: 15.w),
+                height: ((AppTheme().largeParagraphBoldText.fontSize)?.h ?? 0),
+                child: Text(
+                  'Market',
+                  style: AppTheme().largeParagraphBoldText.copyWith(
+                        color: AppTheme().greyScale0,
+                      ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(right: 15.w),
+                child: Text(
+                  'Your credit: ${locator<LocalDataRepository>().getUser().credit}',
+                  style: AppTheme().smallParagraphSemiBoldText.copyWith(
+                        color: AppTheme().greyScale0,
+                      ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ),
           SizedBox(
             height: 10.h,

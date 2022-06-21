@@ -12,6 +12,7 @@ import 'package:zspace/objects/unmoveable/portal.dart';
 import '../../../data/models/level_model.dart';
 import '../../../objects/moveable/ships/ship.dart';
 import '../../_components/overlay/lock_overlay.dart';
+import '../../_components/overlay/widgets/game_pause_button.dart';
 import 'game_viewmodel.dart';
 
 class GamePage extends FlameGame
@@ -74,7 +75,9 @@ class GamePage extends FlameGame
     super.onLoad();
     canGoNextLevel = false;
     //LockOverlay().showClassicLoadingOverlay(buildAfterRebuild: true);
-    await viewModel.prepareGame().whenComplete(() {});
+    await viewModel.prepareGame().whenComplete(() {
+      //LockOverlay().closeOverlay();
+    });
   }
 
   @override
@@ -93,6 +96,7 @@ class GamePage extends FlameGame
     if (canGoNextLevel) return;
     canGoNextLevel = true;
     log('is loaded and mounted ${children.length}');
+    GamePauseButtonOverlay().closeCustomOverlay();
     final portal = children.whereType<Portal>().first;
     portal.activate(
       onJumped: goNextLevel,

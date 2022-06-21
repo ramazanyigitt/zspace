@@ -22,8 +22,8 @@ class HiveDataSource implements LocalDataRepository {
     if (Hive.box<UserModel>(_userBoxName).values.length <= 0) {
       await saveUser(UserModel());
     }
-    userStream = Hive.box<UserModel>(_userBoxName).watch().map((box) {
-      log('userStream: ${box.value}');
+    this.userStream = Hive.box<UserModel>(_userBoxName).watch().map((box) {
+      log('UserStream test!');
       return box.value;
     });
   }
@@ -48,9 +48,14 @@ class HiveDataSource implements LocalDataRepository {
   }
 
   @override
-  Future<void> deleteUser() {
-    // TODO: implement deleteUser
-    throw UnimplementedError();
+  Future<void> deleteUser() async {
+    var box = Hive.box<UserModel>(_userBoxName);
+    box.values.first.accessToken = null;
+    box.values.first.createdAt = null;
+    box.values.first.credit = null;
+    box.values.first.emailAddress = null;
+    box.values.first.levelId = null;
+    box.values.first.userName = null;
   }
 
   @override

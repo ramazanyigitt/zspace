@@ -43,12 +43,10 @@ abstract class Ship extends GameObject {
 
   double _speed = 300;
   double _armor = 100;
-  double _maxArmor = 100;
   double _shield = 0;
 
   double getShield() => _shield;
   double getArmor() => _armor;
-  double getMaxArmor() => _maxArmor;
   double getSpeed() => _speed;
 
   void setShield(double shield) {
@@ -57,10 +55,6 @@ abstract class Ship extends GameObject {
 
   void setArmor(double armor) {
     _armor = armor;
-  }
-
-  void setMaxArmor(double maxArmor) {
-    _maxArmor = maxArmor;
   }
 
   void setSpeed(double speed) {

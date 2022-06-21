@@ -4,6 +4,7 @@ import 'package:zspace/domain/entities/episode.dart';
 
 import '../../core/errors/failure.dart';
 import '../entities/inventory_item.dart';
+import '../entities/level.dart';
 import '../entities/market_item.dart';
 import '../entities/user.dart';
 
@@ -30,4 +31,10 @@ abstract class DataRepository {
       MarketCategory category);
 
   Future<Either<Failure, List<Episode>>> getEpisodes();
+
+  Future<Either<Failure, void>> setLevel(int levelId);
+
+  Future<Either<Failure, Level>> getCurrentLevel();
+
+  Future<Either<Failure, void>> addCredit(int amount);
 }

@@ -14,7 +14,6 @@ import 'dart:ui' as ui;
 
 class UserShip extends Ship with CreatureObject {
   /// Pixels/s
-  double maxSpeed = 300.0;
 
   final JoystickComponent joystick;
   final ui.Image image;
@@ -23,6 +22,7 @@ class UserShip extends Ship with CreatureObject {
   final int spriteAmount;
   final double stepTime;
   final bool loop;
+  final double damage;
 
   UserShip({
     required this.image,
@@ -34,6 +34,10 @@ class UserShip extends Ship with CreatureObject {
     List<Vector2>? hitBox,
     this.loop: false,
     bool playing: false,
+    double speed: 300,
+    double armor: 100,
+    double shield: 50,
+    required this.damage,
   }) : super(
           image: image,
           size: shipSize,
@@ -47,6 +51,9 @@ class UserShip extends Ship with CreatureObject {
           playing: playing,
         ) {
     anchor = Anchor.center;
+    setSpeed(speed);
+    setArmor(armor);
+    setShield(shield);
 
     if (this.hitBox == null)
       this.hitBox = [
@@ -60,9 +67,7 @@ class UserShip extends Ship with CreatureObject {
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    setArmor(200);
-    setShield(200);
-    position = gameRef.size / 2;
+    position = gameRef.size - size;
 
     //attackNearestTargetRocket(
     //    duration: Duration(seconds: 1, milliseconds: 800));
@@ -83,7 +88,7 @@ class UserShip extends Ship with CreatureObject {
         lastMoveKey = UniqueKey().toString();
       }
       //log('Moving as ${joystick.relativeDelta * maxSpeed * dt}');
-      position.add(joystick.relativeDelta * maxSpeed * dt);
+      position.add(joystick.relativeDelta * getSpeed() * dt);
       if (keepAngle != true) {
         angle = joystick.delta.screenAngle();
       }
@@ -94,7 +99,7 @@ class UserShip extends Ship with CreatureObject {
       }
 
       final _lastMoveKey = lastMoveKey;
-      attackNearestTarget(lastKey: _lastMoveKey);
+      attackNearestTarget(lastKey: _lastMoveKey, damage: damage);
     }
   }
 
