@@ -46,12 +46,13 @@ class Portal extends GameObject {
           playing: playing,
         ) {
     anchor = Anchor.center;
-    this.hitBox = [
-      Vector2(-1, -1),
-      Vector2(-1, 1),
-      Vector2(1, 1),
-      Vector2(1, -1),
-    ];
+    if (hitBox == null)
+      this.hitBox = [
+        Vector2(-1, -1),
+        Vector2(-1, 1),
+        Vector2(1, 1),
+        Vector2(1, -1),
+      ];
   }
 
   activate({required Function() onJumped}) async {
@@ -67,6 +68,12 @@ class Portal extends GameObject {
       position: this.position,
       loop: true,
       onJumped: onJumped,
+      hitBox: [
+        Vector2(-0.25, -0.25),
+        Vector2(-0.25, 0.25),
+        Vector2(0.25, 0.25),
+        Vector2(0.25, -0.25),
+      ],
     );
     portalActive.priority = this.priority - 1;
     this.gameRef.add(portalActive);

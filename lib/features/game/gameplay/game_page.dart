@@ -3,7 +3,10 @@ import 'dart:developer';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:zspace/data/models/episode_model.dart';
+import 'package:zspace/features/_components/overlay/widgets/game_health_bar.dart';
 import 'package:zspace/features/game/_services/igame_service.dart';
 import 'package:zspace/injection_container.dart';
 import 'package:zspace/objects/moveable/ships/user_ship.dart';
@@ -16,7 +19,11 @@ import '../../_components/overlay/widgets/game_pause_button.dart';
 import 'game_viewmodel.dart';
 
 class GamePage extends FlameGame
-    with HasDraggables, HasTappables, HasCollisionDetection {
+    with
+        HasDraggables,
+        HasTappables,
+        HasCollisionDetection,
+        HasKeyboardHandlerComponents {
   late GameViewModel viewModel;
   LevelModel levelModel;
   EpisodeModel episodeModel;
@@ -25,6 +32,15 @@ class GamePage extends FlameGame
       game: this,
       level: levelModel,
     );
+  }
+
+  @override
+  @mustCallSuper
+  KeyEventResult onKeyEvent(
+    RawKeyEvent event,
+    Set<LogicalKeyboardKey> keysPressed,
+  ) {
+    return super.onKeyEvent(event, keysPressed);
   }
 
   @override
@@ -96,7 +112,6 @@ class GamePage extends FlameGame
     if (canGoNextLevel) return;
     canGoNextLevel = true;
     log('is loaded and mounted ${children.length}');
-    GamePauseButtonOverlay().closeCustomOverlay();
     final portal = children.whereType<Portal>().first;
     portal.activate(
       onJumped: goNextLevel,
@@ -116,6 +131,8 @@ class GamePage extends FlameGame
   }
 
   goNextLevel() {
+    GamePauseButtonOverlay().closeCustomOverlay();
+    GameHealthBarOverlay().closeCustomOverlay();
     locator<GameService>().goToNextLevel(episodeModel, levelModel);
   }
 
@@ -123,6 +140,8 @@ class GamePage extends FlameGame
   void onRemove() {
     log('Removing game');
     super.onRemove();
+    GamePauseButtonOverlay().closeCustomOverlay();
+    GameHealthBarOverlay().closeCustomOverlay();
     pauseEngine();
     removeAll(children);
     detach();

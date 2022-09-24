@@ -45,14 +45,33 @@ class _InventoryPageState extends State<InventoryPage> {
       builder: (context, viewModel, child) {
         return Scaffold(
           backgroundColor: AppTheme().blackColor,
+          appBar: AppBar(
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                color: AppTheme().primaryColor,
+              ),
+            ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            title: Text('Detail'),
+            centerTitle: true,
+            actions: [],
+          ),
           body: SafeArea(
             child: Stack(
               children: [
                 Positioned.fill(
-                  child: locator<LottieCache>().load(
-                    AppImages.spaceBackground.appLottie,
-                    Container(),
+                  child: FittedBox(
                     fit: BoxFit.cover,
+                    child: locator<LottieCache>().load(
+                      AppImages.spaceBackground.appLottie,
+                      Container(),
+                      fit: BoxFit.scaleDown,
+                    ),
                   ),
                 ),
                 Positioned.fill(
@@ -62,8 +81,8 @@ class _InventoryPageState extends State<InventoryPage> {
                         center: Alignment.topLeft,
                         radius: 2.67,
                         colors: <Color>[
-                          Colors.yellow.withAlpha(100),
-                          Colors.black.withAlpha(40)
+                          Colors.black.withAlpha(160),
+                          Colors.black.withAlpha(70)
                         ],
                         tileMode: TileMode.mirror,
                       ).createShader(bounds);

@@ -11,6 +11,7 @@ import 'package:zspace/data/enums/win_point_category.dart';
 import 'package:zspace/data/models/market_item_model.dart';
 import 'package:zspace/domain/repositories/data_repository.dart';
 import 'package:zspace/features/_components/overlay/lock_overlay.dart';
+import 'package:zspace/features/_components/overlay/widgets/game_health_bar.dart';
 import 'package:zspace/features/_components/overlay/widgets/game_pause_button.dart';
 import 'package:zspace/features/game/_services/ispawn_service.dart';
 import 'package:zspace/injection_container.dart';
@@ -38,6 +39,7 @@ class GameViewModel extends BaseViewModel {
   late final JoystickComponent joystick;
   final knobPaint = BasicPalette.blue.withAlpha(200).paint();
   final backgroundPaint = BasicPalette.blue.withAlpha(100).paint();
+  late Vector2 mapSize;
 
   Future<void> prepareGame() async {
     isStarted = false;
@@ -47,9 +49,10 @@ class GameViewModel extends BaseViewModel {
     //Map
 
     var mapImage = await game.images.load(AppImages.mapEpisode1Level1.gameMap);
+    mapSize = Vector2(mapImage.width.toDouble(), mapImage.height.toDouble());
     var map = GameMap(
       mapImage,
-      size: Vector2(738, 1312),
+      size: mapSize, //Vector2(738, 1312),
     );
     map.priority = -2;
     game.add(map);
@@ -97,6 +100,10 @@ class GameViewModel extends BaseViewModel {
         Get.back();
       },
     );
+    GameHealthBarOverlay().show(
+      forceOverlay: true,
+      userShip: player,
+    );
   }
 
   Future<UserShip> getUserWithEquippedItems() async {
@@ -104,7 +111,6 @@ class GameViewModel extends BaseViewModel {
         await locator<DataRepository>().getEquippedInventory();
     double speed = 0, shield = 0, armor = 0, damage = 0;
     late String shipPath;
-    log('Equipped items response ${equippedItemsResponse}');
     if (equippedItemsResponse is Right) {
       final equippedItems =
           ((equippedItemsResponse as Right).value as List<InventoryItem>);
@@ -147,9 +153,11 @@ class GameViewModel extends BaseViewModel {
     return player;
   }
 
-  gameOver() async {
+  Future<void> gameOver() async {
     game.pauseEngine();
     game.removeAll(game.children);
+    GamePauseButtonOverlay().closeCustomOverlay();
+    GameHealthBarOverlay().closeCustomOverlay();
     //LockOverlay().showClassicLoadingOverlay(buildAfterRebuild: true);
     LockOverlayDialog().showCustomOverlay(
       child: CustomDialog(

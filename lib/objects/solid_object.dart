@@ -66,16 +66,16 @@ mixin SolidObject on GameObject {
     List<CollisionDirection> direction = [];
     final x = intersection.x.roundToDouble();
     final y = intersection.y.roundToDouble();
-    if (x <= 0) {
+    if (x - 0.5 <= 0) {
       direction.add(CollisionDirection.LEFT);
     }
-    if (x >= size.x) {
+    if (x + 0.5 >= size.x) {
       direction.add(CollisionDirection.RIGHT);
     }
-    if (y <= 0) {
+    if (y - 0.5 <= 0) {
       direction.add(CollisionDirection.TOP);
     }
-    if (y >= size.y) {
+    if (y + 0.5 >= size.y) {
       direction.add(CollisionDirection.BOTTOM);
     }
     return direction;

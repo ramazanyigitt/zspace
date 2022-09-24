@@ -8,6 +8,7 @@ import 'package:zspace/injection_container.dart';
 
 import '../../../core/services/validator_service.dart';
 import '../../../data/models/auto_validator_model.dart';
+import '../../../domain/repositories/local_data_repository.dart';
 import '../../_components/overlay/lock_overlay.dart';
 import '../../_components/overlay/snackbar_overlay.dart';
 import '../../home/main_menu/main_menu_page.dart';
@@ -39,6 +40,7 @@ class RegisterViewModel extends BaseViewModel {
       password.textController.text,
     );
     if (result is Right) {
+      await locator<LocalDataRepository>().saveUser((result as Right).value);
       Get.off(() => MainMenuPage());
     } else {
       SnackbarOverlay().show(

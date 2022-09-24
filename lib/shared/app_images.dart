@@ -80,6 +80,7 @@ class _Items {
   late final shieldLevel2 = base + 'shield_level_2.png';
   late final speedLevel1 = base + 'speed_level_1.png';
   late final speedLevel2 = base + 'speed_level_2.png';
+  late final frame = base + 'frame.png';
 }
 
 class _Mines {

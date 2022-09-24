@@ -110,9 +110,14 @@ class DataProvider implements DataRepository {
   }
 
   @override
-  Future<Either<Failure, User>> register(String username, String password) {
-    // TODO: implement register
-    throw UnimplementedError();
+  Future<Either<Failure, User>> register(
+      String username, String password) async {
+    try {
+      final remoteData = await remoteDataSource.register(username, password);
+      return Right(remoteData);
+    } on ServerFailure catch (e) {
+      return Left(e);
+    }
   }
 
   @override

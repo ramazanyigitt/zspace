@@ -14,9 +14,7 @@ class TuhitShip extends Ship
     with CreatureObject, ExplodableObject
     implements GameObject {
   TuhitShip({
-    ui.Image? image,
-    Vector2? shipSize,
-    Vector2? textureSize,
+    CreatureSizeInfo? creatureSizeInfo,
     int spriteAmount: 1,
     double stepTime: 0.1,
     List<Vector2>? hitBox,
@@ -24,19 +22,19 @@ class TuhitShip extends Ship
     bool playing: false,
     Vector2? position,
   }) : super(
-          image: image,
-          size: shipSize,
+          image: creatureSizeInfo?.image,
+          size: creatureSizeInfo?.creatureSize,
           animationData: SpriteAnimationData.sequenced(
             amount: spriteAmount,
             stepTime: stepTime,
-            textureSize: textureSize ?? Vector2.zero(),
+            textureSize: creatureSizeInfo?.textureSize ?? Vector2.zero(),
             loop: loop,
           ),
           hitBox: hitBox,
           playing: playing,
           position: position,
+          anchor: Anchor.center,
         ) {
-    anchor = Anchor.center;
     log('tuhit ?!');
     this.hitBox = [
       Vector2(-0.85, -0.75),
@@ -55,6 +53,7 @@ class TuhitShip extends Ship
     log('tuhit onload!');
     super.onLoad();
     setArmor(50);
+    setShield(100);
     setSpeed(50);
     _isAttacking = false;
   }
@@ -80,8 +79,7 @@ class TuhitShip extends Ship
     if (!this.isMounted) return;
     createNormalExplode(this.gameRef, diff, damage: 50);
     _isAttacking = false;
-    this.gameRef.remove(this);
-    this.removeFromParent();
+    onDie(isKilled: false);
   }
 
   rotateForAttack() async {
@@ -98,11 +96,12 @@ class TuhitShip extends Ship
     //renderDebugMode(canvas);
   }
 
-  void onDie() {
+  @override
+  void onDie({bool isKilled: true}) {
     final diff = this.position - position;
     createNormalExplode(this.gameRef, diff);
     log('Patladı!');
-    this.gameRef.remove(this);
-    this.removeFromParent();
+    if (isKilled) giveCredit(10);
+    super.onDie();
   }
 }

@@ -38,6 +38,9 @@ class GameMap extends GameObject with SolidObject {
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    canvas.drawImage(image, Offset.zero, Paint());
+    //canvas.drawImage(image, Offset.zero, Paint());
+    //draw visible image on the map
+    canvas.drawImageRect(image, Rect.fromLTWH(0, 0, size.x, size.y),
+        Rect.fromLTWH(position.x, position.y, size.x, size.y), Paint());
   }
 }

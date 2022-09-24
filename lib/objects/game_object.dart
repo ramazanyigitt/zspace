@@ -3,10 +3,12 @@ import 'dart:ui' as ui;
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/extensions.dart';
 import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Image;
 import 'package:zspace/data/enums/creature_types.dart';
+import 'package:zspace/features/game/gameplay/game_page.dart';
 import 'package:zspace/objects/moveable/lasers/red_laser.dart';
 import 'package:zspace/objects/moveable/rockets/rocket.dart';
 import 'package:zspace/objects/moveable/rockets/short_rocket.dart';
@@ -115,58 +117,57 @@ class GameObject extends SpriteAnimationComponent
       textureSize: Vector2(600.0, 600.0),
       spriteAmount: 1,
       playing: false,
-      position: position,
+      position: position - (Vector2(196.0, -50.0) / 2),
     );
   }
 
   static Future<Ship> create(
-      CreatureType creatureType, FlameGame game, Vector2 position) async {
+      CreatureType creatureType, GamePage game, Vector2 position) async {
     log('Game attach: ${game.isAttached} ${game.isLoaded}');
+    var creatureInfo = await creatureType.loadImage(game);
+
+    //calculate if creature is inside game area and if not, move it to the edge of the game area
+    position = _fixSpawnPosition(
+        creatureInfo: creatureInfo, game: game, position: position);
+
     if (creatureType == CreatureType.Tuhit) {
-      var creatureImage = await game.images.load(AppImages.ships.tuhitShip);
-      return TuhitShip(
-        image: creatureImage,
-        shipSize: Vector2(128.0, 128.0),
-        textureSize: Vector2(600.0, 600.0),
-        spriteAmount: 1,
-        playing: false,
-        position: position,
-      );
+      return TuhitShip(creatureSizeInfo: creatureInfo, position: position);
     } else if (creatureType == CreatureType.Nemertea) {
-      var creatureImage = await game.images.load(AppImages.ships.nemerteaShip);
-      return NemerteaShip(
-        image: creatureImage,
-        shipSize: Vector2(128.0, 128.0),
-        textureSize: Vector2(512.0, 512.0),
-        spriteAmount: 1,
-        playing: false,
-        position: position,
-      );
+      return NemerteaShip(creatureSizeInfo: creatureInfo, position: position);
     } else if (creatureType == CreatureType.Korath) {
-      var creatureImage = await game.images.load(AppImages.ships.korathShip);
-      return KorathShip(
-        image: creatureImage,
-        shipSize: Vector2(128.0, 128.0),
-        textureSize: Vector2(280.0, 280.0),
-        spriteAmount: 1,
-        playing: false,
-        position: position,
-      );
+      return KorathShip(creatureSizeInfo: creatureInfo, position: position);
     } else if (creatureType == CreatureType.Bastion) {
-      var creatureImage = await game.images.load(AppImages.ships.bastionShip);
-      return BastionShip(
-        image: creatureImage,
-        shipSize: Vector2(128.0, 128.0),
-        textureSize: Vector2(280.0, 280.0),
-        spriteAmount: 1,
-        playing: false,
-        position: position,
-      );
+      return BastionShip(creatureSizeInfo: creatureInfo, position: position);
     } else {
       log("Error in GameObject",
           error: '$creatureType is not defined in GameObject');
       throw Exception('Error $creatureType is not defined in GameObject');
     }
+  }
+
+  static Vector2 _fixSpawnPosition({
+    required Vector2 position,
+    required GamePage game,
+    required CreatureSizeInfo creatureInfo,
+  }) {
+    if (position.x < creatureInfo.creatureSize.x / 2) {
+      position = Vector2(creatureInfo.creatureSize.x / 2, position.y);
+    }
+    if (position.x >
+        game.viewModel.mapSize.x - creatureInfo.creatureSize.x / 2) {
+      position = Vector2(
+          game.viewModel.mapSize.x - creatureInfo.creatureSize.x / 2,
+          position.y);
+    }
+    if (position.y < creatureInfo.creatureSize.y / 2) {
+      position = Vector2(position.x, creatureInfo.creatureSize.y / 2);
+    }
+    if (position.y >
+        game.viewModel.mapSize.y - creatureInfo.creatureSize.y / 2) {
+      position = Vector2(position.x,
+          game.viewModel.mapSize.y - creatureInfo.creatureSize.y / 2);
+    }
+    return position;
   }
 
   static Future<T> createLaser<T extends Laser>(

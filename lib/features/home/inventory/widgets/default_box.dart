@@ -21,36 +21,84 @@ class DefaultBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 80,
-      height: 80,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        color: removeBackground ? Colors.transparent : AppTheme().blackColor,
-      ),
-      child: Center(
-        child: Container(
-          width: 65,
-          height: 65,
-          decoration: BoxDecoration(
-            image: (item.inventoryItem != null && !dragging)
-                ? DecorationImage(
-                    image: AssetImage(
-                      item.inventoryItem!.item!.imageUrl!.appImage,
-                    ),
-                  )
-                : null,
+    return Stack(
+      children: [
+        if (!removeBackground)
+          Container(
+            width: 80,
+            height: 80,
+            child: Center(
+              child: Container(
+                alignment: Alignment.center,
+                width: 70,
+                height: 80,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.black.withOpacity(0.35),
+                ),
+              ),
+            ),
           ),
-          child: isLocked
-              ? Center(
-                  child: Icon(
-                    Icons.lock,
-                    color: Colors.white,
+        Container(
+          width: 80,
+          height: 80,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            image: removeBackground
+                ? null
+                : DecorationImage(
+                    image: AssetImage(
+                      AppImages.items.frame.appImage,
+                    ),
+                    colorFilter: ColorFilter.matrix(<double>[
+                      0.393,
+                      0.45,
+                      0.089,
+                      0,
+                      0,
+                      0.349,
+                      0.686,
+                      0.868,
+                      0.1,
+                      0,
+                      0.272,
+                      0.534,
+                      2,
+                      0,
+                      0,
+                      0,
+                      0,
+                      1,
+                      1,
+                      0,
+                    ]),
                   ),
-                )
-              : null,
+          ),
+          child: Center(
+            child: Container(
+              width: 65,
+              height: 65,
+              decoration: BoxDecoration(
+                image: (item.inventoryItem != null && !dragging)
+                    ? DecorationImage(
+                        image: AssetImage(
+                          item.inventoryItem!.item!.imageUrl!.appImage,
+                        ),
+                      )
+                    : null,
+              ),
+              child: isLocked
+                  ? Center(
+                      child: Icon(
+                        Icons.lock,
+                        color: Colors.white,
+                      ),
+                    )
+                  : null,
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }

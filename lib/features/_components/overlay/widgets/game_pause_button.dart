@@ -94,11 +94,11 @@ class _GamePauseButtonWidgetState extends State<GamePauseButtonWidget> {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.topLeft,
+      alignment: Alignment.topRight,
       child: SafeArea(
         child: Container(
           margin: EdgeInsets.symmetric(
-              horizontal: 15, vertical: kBottomNavigationBarHeight / 2),
+              horizontal: 15, vertical: kBottomNavigationBarHeight / 2 - 15),
           child: Material(
             color: Colors.grey[850],
             borderRadius: BorderRadius.circular(5),

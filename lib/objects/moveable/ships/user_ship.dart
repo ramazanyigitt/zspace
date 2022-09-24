@@ -75,8 +75,8 @@ class UserShip extends Ship with CreatureObject {
 
   @override
   void onDie() {
-    super.onDie();
     (gameRef as GamePage).viewModel.gameOver();
+    super.onDie();
   }
 
   @override

@@ -1,5 +1,7 @@
 import 'dart:developer';
 import 'dart:math' as math;
+import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
@@ -9,12 +11,19 @@ import 'package:zspace/features/game/gameplay/game_page.dart';
 import 'package:zspace/injection_container.dart';
 import 'package:zspace/objects/moveable/lasers/red_laser.dart';
 import 'package:zspace/objects/moveable/ships/ship.dart';
+import 'package:zspace/objects/unmoveable/health_bar.dart';
 import 'game_object.dart';
 import 'moveable/rockets/short_rocket.dart';
 import 'moveable/ships/user_ship.dart';
 import 'unmoveable/game_map.dart';
 
 mixin CreatureObject on Ship {
+  @mustCallSuper
+  @override
+  Future<void> onLoad() async {
+    super.onLoad();
+  }
+
   rotateToUser() {
     var userShip = gameRef.children.whereType<UserShip>().first;
 
@@ -156,12 +165,14 @@ mixin CreatureObject on Ship {
   giveCredit(int amount) {
     locator<DataRepository>().addCredit(amount);
     GameSnackbarOverlay().show(
-      text: '+$amount Credit',
-      buttonText: 'Ok',
+      text: 'You gain $amount Credit',
+      buttonText: '',
       forceOverlay: true,
       fullTap: true,
-      onTap: () {},
-      removeDuration: Duration(seconds: 3),
+      onTap: () {
+        GameSnackbarOverlay().closeCustomOverlay();
+      },
+      removeDuration: Duration(seconds: 2),
     );
   }
 }

@@ -14,9 +14,7 @@ class KorathShip extends Ship
     with CreatureObject, ExplodableObject
     implements GameObject {
   KorathShip({
-    ui.Image? image,
-    Vector2? shipSize,
-    Vector2? textureSize,
+    CreatureSizeInfo? creatureSizeInfo,
     int spriteAmount: 1,
     double stepTime: 0.1,
     List<Vector2>? hitBox,
@@ -24,19 +22,19 @@ class KorathShip extends Ship
     bool playing: false,
     Vector2? position,
   }) : super(
-          image: image,
-          size: shipSize,
+          image: creatureSizeInfo?.image,
+          size: creatureSizeInfo?.creatureSize,
           animationData: SpriteAnimationData.sequenced(
             amount: spriteAmount,
             stepTime: stepTime,
-            textureSize: textureSize ?? Vector2.zero(),
+            textureSize: creatureSizeInfo?.textureSize ?? Vector2.zero(),
             loop: loop,
           ),
           hitBox: hitBox,
           playing: playing,
           position: position,
+          anchor: Anchor.center,
         ) {
-    anchor = Anchor.center;
     log('korath ?!');
     this.hitBox = [
       Vector2(-0.25, -1),
@@ -66,11 +64,12 @@ class KorathShip extends Ship
     //renderDebugMode(canvas);
   }
 
+  @override
   void onDie() {
     final diff = this.position - position;
     createNormalExplode(this.gameRef, diff);
     log('Patladı!');
-    this.gameRef.remove(this);
-    this.removeFromParent();
+    giveCredit(15);
+    super.onDie();
   }
 }
