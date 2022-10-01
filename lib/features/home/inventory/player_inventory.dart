@@ -9,20 +9,22 @@ class _PlayerInventory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10),
-      child: GridView.builder(
-        itemCount: viewModel.inventoryItems.length - 6,
-        itemBuilder: (context, index) {
-          final item = viewModel.inventoryItems[index + 6];
-          item.index = index + 6;
-          return DraggableItemBox(
-            item: item,
-            viewModel: viewModel,
-          );
-        },
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      sliver: SliverGrid(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            final item = viewModel.inventoryItems[index + 6];
+            item.index = index + 6;
+            return DraggableItemBox(
+              item: item,
+              viewModel: viewModel,
+            );
+          },
+          childCount: viewModel.inventoryItems.length - 6,
+        ),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
+          crossAxisCount: 5,
           mainAxisSpacing: 20,
           crossAxisSpacing: 15,
         ),

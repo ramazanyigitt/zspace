@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:stacked/stacked.dart';
@@ -15,14 +16,17 @@ import 'package:zspace/features/_components/overlay/widgets/game_health_bar.dart
 import 'package:zspace/features/_components/overlay/widgets/game_pause_button.dart';
 import 'package:zspace/features/game/_services/ispawn_service.dart';
 import 'package:zspace/injection_container.dart';
+import 'package:zspace/objects/unmoveable/exhausts/blue_exhaust.dart';
 
 import '../../../data/models/level_model.dart';
 import '../../../domain/entities/inventory_item.dart';
 import '../../../objects/moveable/ships/user_ship.dart';
 import '../../../objects/unmoveable/game_map.dart';
+import '../../../objects/unmoveable/health_bar.dart';
 import '../../../shared/app_images.dart';
 import '../../_components/overlay/lock_overlay_dialog.dart';
 import '../../_components/overlay/widgets/custom_dialog.dart';
+import '../../_components/overlay/widgets/game_credit_icon.dart';
 import '../_services/igame_service.dart';
 import 'game_page.dart';
 
@@ -70,6 +74,25 @@ class GameViewModel extends BaseViewModel {
     );
 
     final player = await getUserWithEquippedItems();
+    player.healthBar = HealthBar(
+        object: player, barFillColor: Colors.green[600]!, addText: true);
+
+    var blueExhaustImages =
+        await game.images.loadAll(AppImages.exhausts.blueExhausts);
+    for (var i = 0; i < blueExhaustImages.length; i++) {
+      final blueExhaust = BlueExhaust(
+        shipObject: player,
+        image: blueExhaustImages[i],
+        frameAmount: AppImages.exhausts.blueExhaustFrameAmounts[i],
+        position: player.position,
+        size: Vector2(
+          blueExhaustImages.first.width /
+              AppImages.exhausts.blueExhaustFrameAmounts[i],
+          blueExhaustImages.first.height + 0.0,
+        ),
+      );
+      game.add(blueExhaust);
+    }
 
     //Camera set up
     game.camera.speed = 1;
@@ -77,6 +100,8 @@ class GameViewModel extends BaseViewModel {
         worldBounds: map.bounds, relativeOffset: Anchor.center);
 
     game.add(player);
+    game.add(player.healthBar!);
+
     game.add(joystick);
 
     await locator<GameService>().spawnService.spawnCreatures(
@@ -100,10 +125,17 @@ class GameViewModel extends BaseViewModel {
         Get.back();
       },
     );
-    GameHealthBarOverlay().show(
+    GameCreditIconOverlay().show(
+      forceOverlay: true,
+      text: 'text',
+      buttonText: '',
+      onTap: () {},
+      onClickResume: () {},
+    );
+    /*GameHealthBarOverlay().show(
       forceOverlay: true,
       userShip: player,
-    );
+    );*/
   }
 
   Future<UserShip> getUserWithEquippedItems() async {
@@ -134,8 +166,10 @@ class GameViewModel extends BaseViewModel {
     final player = UserShip(
       image: userShipImage,
       joystick: joystick,
-      shipSize: Vector2(128.0, 128.0),
-      textureSize: Vector2(550.0, 648.0),
+      shipSize: Vector2(userShipImage.width / userShipImage.height * 128,
+          userShipImage.width / userShipImage.height * 128.0),
+      textureSize:
+          Vector2(userShipImage.width + 0.0, userShipImage.height + 0.0),
       spriteAmount: 1,
       playing: true,
       hitBox: [
@@ -157,6 +191,7 @@ class GameViewModel extends BaseViewModel {
     game.pauseEngine();
     game.removeAll(game.children);
     GamePauseButtonOverlay().closeCustomOverlay();
+    GameCreditIconOverlay().closeCustomOverlay();
     GameHealthBarOverlay().closeCustomOverlay();
     //LockOverlay().showClassicLoadingOverlay(buildAfterRebuild: true);
     LockOverlayDialog().showCustomOverlay(

@@ -88,7 +88,8 @@ class UserShip extends Ship with CreatureObject {
         lastMoveKey = UniqueKey().toString();
       }
       //log('Moving as ${joystick.relativeDelta * maxSpeed * dt}');
-      position.add(joystick.relativeDelta * getSpeed() * dt);
+      currentSpeedVelocity = joystick.relativeDelta * getSpeed() * dt;
+      position.add(currentSpeedVelocity!);
       if (keepAngle != true) {
         angle = joystick.delta.screenAngle();
       }

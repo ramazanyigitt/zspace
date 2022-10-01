@@ -31,3 +31,15 @@ class NetworkInfoImpl implements NetworkInfo {
     });
   }
 }
+
+class WebNetworkInfoImpl implements NetworkInfo {
+  @override
+  // TODO: implement isConnected
+  Future<bool> get isConnected => throw UnimplementedError();
+
+  @override
+  void onInternetChange(
+      {required Function() onConnect, required Function() onDisconnect}) {
+    // TODO: implement onInternetChange
+  }
+}

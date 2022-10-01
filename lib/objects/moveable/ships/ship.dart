@@ -6,6 +6,7 @@ import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:zspace/objects/unmoveable/exhausts/exhaust.dart';
 import 'package:zspace/objects/unmoveable/health_bar.dart';
 import 'dart:math' as math;
 export 'package:zspace/data/enums/creature_types.dart';
@@ -26,6 +27,7 @@ abstract class Ship extends GameObject {
     List<Vector2>? hitBox,
     bool playing: false,
     this.healthBar,
+    this.exhaust,
   }) : super(
           image: image,
           animationData: animationData,
@@ -40,6 +42,7 @@ abstract class Ship extends GameObject {
   late bool targeting;
   late bool moving;
   HealthBar? healthBar;
+  Exhaust? exhaust;
   String? lastMoveKey;
 
   @override
@@ -54,6 +57,7 @@ abstract class Ship extends GameObject {
   double _shield = 0;
   double _maxArmor = 100;
   double _maxShield = 0;
+  Vector2? currentSpeedVelocity;
 
   double getMaxShield() => _maxShield;
   double getMaxArmor() => _maxArmor;
@@ -186,6 +190,7 @@ abstract class Ship extends GameObject {
   @mustCallSuper
   void onDie() {
     if (healthBar != null) this.gameRef.remove(healthBar!);
+    if (exhaust != null) this.gameRef.remove(exhaust!);
     this.gameRef.remove(this);
     this.removeFromParent();
     closeStreams();

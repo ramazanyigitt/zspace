@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:rest_api_package/requests/rest_api_request.dart';
@@ -49,17 +50,24 @@ Future<void> init() async {
   );
 
   //!Core
-  locator.registerLazySingleton<NetworkInfo>(
-    () => NetworkInfoImpl(locator()),
-  );
+  if (kIsWeb) {
+    locator.registerLazySingleton<NetworkInfo>(
+      () => WebNetworkInfoImpl(),
+    );
+  } else {
+    locator.registerLazySingleton<NetworkInfo>(
+      () => NetworkInfoImpl(locator()),
+    );
+  }
   locator.registerLazySingleton<RestApiHttpService>(
     () => RestApiHttpService(Dio(), DefaultCookieJar()),
   );
 
   //!External
-  locator.registerLazySingleton(
-    () => InternetConnectionChecker(),
-  );
+  if (!kIsWeb)
+    locator.registerLazySingleton(
+      () => InternetConnectionChecker(),
+    );
   locator.registerLazySingleton(
     () => LottieCache(),
   );

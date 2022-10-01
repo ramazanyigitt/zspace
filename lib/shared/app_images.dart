@@ -10,6 +10,7 @@ class AppImages {
   static final _AppImagesRockets rockets = _AppImagesRockets();
   static final _AppImagesShields shields = _AppImagesShields();
   static final _AppImagesShips ships = _AppImagesShips();
+  static final _AppImagesExhausts exhausts = _AppImagesExhausts();
   static final _Utilities utilities = _Utilities();
 
   static final loading = 'loading.gif';
@@ -27,14 +28,26 @@ class _AppImagesLasers {
 
 class _AppImagesShips {
   final base = 'ships/';
-  late final vengeanceShip = base + 'vengeance.png';
+  late final vengeanceShip = base + 'striker.png';
   late final tuhitShip = base + 'tuhit.png';
-  late final leonovShip = base + 'leonov.png';
+  late final leonovShip = base + 'executioner.png';
   late final korathShip = base + 'korath.png';
   late final nemerteaShip = base + 'nemertea.png';
   late final bastionShip = base + 'bastion.png';
   late final rhapsodyShip = base + 'rhapsody.png';
   late final uralShip = base + 'ural.png';
+}
+
+class _AppImagesExhausts {
+  final base = 'exhausts/';
+  //late final blueExhaust = base + 'burning_loop_[0-9].png';
+  late final blueExhausts = [
+    base + 'burning_loop_1.png',
+    base + 'burning_loop_2.png',
+    base + 'burning_loop_3.png',
+    base + 'burning_loop_4.png'
+  ];
+  final blueExhaustFrameAmounts = [8, 8, 6, 6];
 }
 
 class _AppImagesExplosions {

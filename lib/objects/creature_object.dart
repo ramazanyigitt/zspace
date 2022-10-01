@@ -157,6 +157,7 @@ mixin CreatureObject on Ship {
 
   Future<GameObject?> findTarget() async {
     final component = gameRef.children.firstWhere((value) => value is UserShip);
+    //TODO fix here it is casuing to stucking when click pause repeatadly
 
     final enemy = component as Ship;
     return enemy;

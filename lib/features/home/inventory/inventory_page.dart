@@ -24,6 +24,8 @@ import '../../../shared/app_images.dart';
 import '../../../shared/app_theme.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../shop/market/market_page.dart';
+
 part 'ship_inventory.dart';
 part 'player_inventory.dart';
 part 'ship_view.dart';
@@ -45,70 +47,53 @@ class _InventoryPageState extends State<InventoryPage> {
       builder: (context, viewModel, child) {
         return Scaffold(
           backgroundColor: AppTheme().blackColor,
-          appBar: AppBar(
-            flexibleSpace: Container(
-              decoration: BoxDecoration(
-                color: AppTheme().primaryColor,
+          body: Stack(
+            children: [
+              Positioned.fill(
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: locator<LottieCache>().load(
+                    AppImages.spaceBackground.appLottie,
+                    Container(),
+                    fit: BoxFit.scaleDown,
+                  ),
+                ),
               ),
-            ),
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            title: Text('Detail'),
-            centerTitle: true,
-            actions: [],
-          ),
-          body: SafeArea(
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: FittedBox(
-                    fit: BoxFit.cover,
-                    child: locator<LottieCache>().load(
-                      AppImages.spaceBackground.appLottie,
-                      Container(),
-                      fit: BoxFit.scaleDown,
-                    ),
+              Positioned.fill(
+                child: ShaderMask(
+                  shaderCallback: (Rect bounds) {
+                    return RadialGradient(
+                      center: Alignment.topLeft,
+                      radius: 2.67,
+                      colors: <Color>[
+                        Colors.black.withAlpha(160),
+                        Colors.black.withAlpha(70)
+                      ],
+                      tileMode: TileMode.mirror,
+                    ).createShader(bounds);
+                  },
+                  child: Container(
+                    color: Colors.white,
                   ),
                 ),
-                Positioned.fill(
-                  child: ShaderMask(
-                    shaderCallback: (Rect bounds) {
-                      return RadialGradient(
-                        center: Alignment.topLeft,
-                        radius: 2.67,
-                        colors: <Color>[
-                          Colors.black.withAlpha(160),
-                          Colors.black.withAlpha(70)
-                        ],
-                        tileMode: TileMode.mirror,
-                      ).createShader(bounds);
-                    },
+              ),
+              if (!viewModel.isInited)
+                Container(
+                  height: 1.sh,
+                  child: Center(
                     child: Container(
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                if (!viewModel.isInited)
-                  Container(
-                    height: 1.sh,
-                    child: Center(
-                      child: Container(
-                        width: 48.w,
-                        height: 48.w,
-                        child: CircularProgressIndicator.adaptive(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            AppTheme().darkPrimaryColor,
-                          ),
-                          strokeWidth: 3,
+                      width: 48.w,
+                      height: 48.w,
+                      child: CircularProgressIndicator.adaptive(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          AppTheme().darkPrimaryColor,
                         ),
+                        strokeWidth: 3,
                       ),
                     ),
                   ),
-                if (viewModel.isInited)
+                ),
+              /*if (viewModel.isInited)
                   Column(
                     children: [
                       _ShipInventory(
@@ -120,43 +105,110 @@ class _InventoryPageState extends State<InventoryPage> {
                         ),
                       ),
                     ],
-                  ),
-                /*NestedScrollView(
-                  controller: viewModel.scrollController,
-                  body: _PlayerInventory(
-                    viewModel: viewModel,
-                  ),
-                  headerSliverBuilder:
-                      (BuildContext context, bool innerBoxIsScrolled) {
-                    return <Widget>[
-                      SliverAppBar(
-                        collapsedHeight: 400,
-                        expandedHeight: 400,
-                        //floating: false,
-                        pinned: true,
-                        //snap: false,
-                        backgroundColor: Colors.transparent,
-                        flexibleSpace: FlexibleSpaceBar(
-                          stretchModes: [
-                            StretchMode.zoomBackground,
-                            StretchMode.blurBackground,
-                            StretchMode.fadeTitle,
-                          ],
-                          background: _ShipInventory(
-                            viewModel: viewModel,
+                  ),*/
+              if (viewModel.isInited)
+                SafeArea(
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverPersistentHeader(
+                        pinned: false,
+                        floating: true,
+                        delegate: PersistentHeader(
+                          widget: Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.arrow_back_ios),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                        elevation: 0,
-                        forceElevated: false,
                       ),
-                    ];
-                  },
-                ),*/
-              ],
-            ),
+                      SliverToBoxAdapter(
+                        child: Container(
+                          child: IconButton(
+                            icon: const Icon(Icons.arrow_back_ios),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ),
+                      ),
+                      SliverToBoxAdapter(
+                        child: _ShipInventory(
+                          viewModel: viewModel,
+                        ),
+                      ),
+                      _PlayerInventory(
+                        viewModel: viewModel,
+                      ),
+                    ],
+                  ),
+                ),
+              /*NestedScrollView(
+                    controller: viewModel.scrollController,
+                    body: _PlayerInventory(
+                      viewModel: viewModel,
+                    ),
+                    headerSliverBuilder:
+                        (BuildContext context, bool innerBoxIsScrolled) {
+                      return <Widget>[
+                        SliverAppBar(
+                          collapsedHeight: 420,
+                          expandedHeight: 420,
+                          floating: false,
+                          pinned: true,
+                          //snap: false,
+                          backgroundColor: Colors.transparent,
+                          automaticallyImplyLeading: false,
+                          flexibleSpace: FlexibleSpaceBar(
+                            stretchModes: [
+                              StretchMode.zoomBackground,
+                              StretchMode.blurBackground,
+                              StretchMode.fadeTitle,
+                            ],
+                            background: _ShipInventory(
+                              viewModel: viewModel,
+                            ),
+                          ),
+                          elevation: 0,
+                          forceElevated: false,
+                        ),
+                      ];
+                    },
+                  ),*/
+            ],
           ),
         );
       },
     );
+  }
+}
+
+class PersistentHeader extends SliverPersistentHeaderDelegate {
+  final Widget widget;
+
+  PersistentHeader({required this.widget});
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return widget;
+  }
+
+  @override
+  double get maxExtent => 40.h;
+
+  @override
+  double get minExtent => 40.h;
+
+  @override
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
+    return true;
   }
 }

@@ -34,7 +34,8 @@ import '../requests/unequip_item_request.dart';
 
 class HttpDataSource implements RemoteDataRepository {
   @override
-  String get baseUrl => 'http://10.0.2.2:8080/';
+  //String get baseUrl => 'http://10.0.2.2:8080/';
+  String get baseUrl => 'http://localhost:8080/';
 
   @override
   Future<List<InventoryItemModel>> buyItem(int marketItemId) async {

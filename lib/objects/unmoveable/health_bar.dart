@@ -6,10 +6,17 @@ import 'package:zspace/objects/game_object.dart';
 import 'package:zspace/objects/moveable/ships/ship.dart';
 import 'dart:math' as math;
 
+import 'package:zspace/shared/app_theme.dart';
+
 class HealthBar extends PositionComponent {
   final Ship object;
+  final Color barFillColor, barEmptyColor;
+  final bool addText;
   HealthBar({
     required this.object,
+    this.addText: false,
+    this.barFillColor: const Color.fromARGB(255, 229, 57, 53),
+    this.barEmptyColor: Colors.grey,
   });
 
   @override
@@ -75,7 +82,7 @@ class HealthBar extends PositionComponent {
         20,
         Radius.circular(5),
       ),
-      new Paint()..color = Colors.grey.withOpacity(0.55),
+      new Paint()..color = barEmptyColor.withOpacity(0.55),
     );
     canvas.drawRRect(
       RRect.fromLTRBR(
@@ -85,8 +92,33 @@ class HealthBar extends PositionComponent {
         20,
         Radius.circular(5),
       ),
-      new Paint()..color = Colors.red[600]!.withOpacity(0.9),
+      new Paint()..color = barFillColor.withOpacity(0.9),
     );
+
+    if (addText) _paintText(canvas, Size(object.size.x, object.size.y));
+
     canvas.restore();
+  }
+
+  void _paintText(Canvas canvas, Size size) {
+    final textSpan = TextSpan(
+      text:
+          '${object.getArmor().toInt() == 0 ? '1' : object.getArmor().toInt()}',
+      style: AppTheme().smallParagraphSemiBoldText,
+    );
+    final textPainter = TextPainter(
+      text: textSpan,
+      textDirection: TextDirection.ltr,
+    );
+
+    textPainter.layout();
+    textPainter.paint(
+      canvas,
+      Offset(
+        // Do calculations here:
+        (size.width - textPainter.width) * 0.5,
+        (size.height - textPainter.height) * -0.1,
+      ),
+    );
   }
 }

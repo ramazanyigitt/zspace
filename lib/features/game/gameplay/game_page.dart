@@ -15,6 +15,7 @@ import 'package:zspace/objects/unmoveable/portal.dart';
 import '../../../data/models/level_model.dart';
 import '../../../objects/moveable/ships/ship.dart';
 import '../../_components/overlay/lock_overlay.dart';
+import '../../_components/overlay/widgets/game_credit_icon.dart';
 import '../../_components/overlay/widgets/game_pause_button.dart';
 import 'game_viewmodel.dart';
 
@@ -99,7 +100,7 @@ class GamePage extends FlameGame
   @override
   void update(double dt) {
     super.update(dt);
-    //print children
+    //todo maybe move to this to ship ondied method can increase performance
     if (isLoaded && isMounted && viewModel.isStarted) {
       bool _isAllCreaturesDead = isAllCreaturesDead();
       if (_isAllCreaturesDead) {
@@ -112,6 +113,7 @@ class GamePage extends FlameGame
     if (canGoNextLevel) return;
     canGoNextLevel = true;
     log('is loaded and mounted ${children.length}');
+    this.camera.shake(duration: 0.3, intensity: 10);
     final portal = children.whereType<Portal>().first;
     portal.activate(
       onJumped: goNextLevel,
@@ -132,6 +134,7 @@ class GamePage extends FlameGame
 
   goNextLevel() {
     GamePauseButtonOverlay().closeCustomOverlay();
+    GameCreditIconOverlay().closeCustomOverlay();
     GameHealthBarOverlay().closeCustomOverlay();
     locator<GameService>().goToNextLevel(episodeModel, levelModel);
   }
@@ -141,6 +144,7 @@ class GamePage extends FlameGame
     log('Removing game');
     super.onRemove();
     GamePauseButtonOverlay().closeCustomOverlay();
+    GameCreditIconOverlay().closeCustomOverlay();
     GameHealthBarOverlay().closeCustomOverlay();
     pauseEngine();
     removeAll(children);

@@ -33,7 +33,7 @@ class _ShipInventoryState extends State<_ShipInventory> {
       child: Column(
         children: [
           Container(
-            height: 350,
+            height: 280,
             child: Row(
               children: [
                 Column(

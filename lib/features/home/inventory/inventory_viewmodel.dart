@@ -90,8 +90,8 @@ class InventoryViewModel extends BaseViewModel {
           ),
         );
       }
-      if (unEquippedItems.length % 4 != 0) {
-        for (int i = 0; i < 4 - (unEquippedItems.length % 4); i++) {
+      if (unEquippedItems.length % 5 != 0) {
+        for (int i = 0; i < 5 - (unEquippedItems.length % 5); i++) {
           inventoryItems.add(
             SlideItem(
               inventoryItems.length,
@@ -99,7 +99,7 @@ class InventoryViewModel extends BaseViewModel {
           );
         }
       }
-      for (int i = 0; i < 8; i++) {
+      for (int i = 0; i < 30; i++) {
         inventoryItems.add(
           SlideItem(
             inventoryItems.length,
